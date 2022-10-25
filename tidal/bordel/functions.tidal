@@ -1,0 +1,192 @@
+let
+    midi x = s "midi" # midichan x
+    sh x p = (<~) x $ p
+--
+    tilt = pF "tilt"
+    plat = pF "plat"
+    curve = pF "curve"
+    mod s t r1 r2 w = (sh s $ segment t $ range r1 r2 $ w)
+    modex s t r1 r2 w = (sh s $ segment t $ rangex r1 r2 $ w)
+--
+    pitchEnv = pF "pitchEnv"
+    pitchEnvSpeed = pF "pitchEnvSpeed"
+    colorEnv = pF "colorEnv"
+    colorSpeed = pF "colorSpeed"
+    timbreEnv = pF "timbreEnv"
+    timbreSpeed = pF "timbreSpeed"
+-- 
+    fall = pF "fall"
+    fallRate = pF "fallRate"
+    fallCurve = pF "fallCurve"
+    rise = pF "rise"
+    riseRate = pF "riseRate"
+    riseCurve = pF "riseCurve"
+    curves f r = fallCurve f # riseCurve r
+    curvefr c = fallCurve c # riseCurve c
+--
+    grainPos = pF "grainPos"
+    grainSize = pF "grainSize"
+    grainRate = pF "grainRate"
+    grainFreq = pF "grainFreq"
+    grainPosModAmp = pF "grainPosModAmp"
+    grainPosModRate = pF "grainPosModRate"
+    grainSizeRatio = pF "grainSizeRatio"
+    grainFreqRatio = pF "grainFreqRatio"
+    grainPitch = pF "grainPitch"
+    grainFreqModAmp = pF "grainFreqModAmp"
+    grainFreqModRate = pF "grainFreqModRate"
+    grainIndex = pI "grainIndex"
+    grainPosRand = pF "grainPosRand"
+    grainPitchRand = pF "grainPitchRand"
+    grainPhase = pF "grainPhase"
+    grainFreqModPhase = pF "grainFreqModPhase"
+    grainsound = pS "grainsound"
+--
+    fmAmount = pF "fmAmount"
+    fmRatio = pF "fmRatio"
+--
+    ar a r = attack a # release r
+-- TIDAL LOOPER 
+    linput = pI "linput"
+    lname = pS "lname"
+-- fx
+    sdelay w t f = delay w # delayt t # delayfb f
+    waveshaperMix = pF "waveshaperMix"
+    lockhartMix = pF "lockhartMix"
+    lockhartPre = pF "lockhartPre"
+    lockhart p m = lockhartPre p # lockhartMix m
+    phasormodalMix = pF "phasormodalMix"
+    phasormodalFreq = pF "phasormodalMix"
+    phasormodalPre = pF "phasormodalPre"
+    phasormodalDecay = pF "phasormodalDecay"
+    phasormodalDamp = pF "phasormodalDamp"
+    phasormodalPhase = pF "phasormodalPhase"
+    formantCarrierFreq = pF "formantCarrierFreq"
+    formantShift = pF "formantShift"
+    formantCarrierRatio = pF "formantCarrierRatio"
+    compPre= pF "compPre"
+    compRatio = pF "compRatio"
+    compThreshold = pF "compThreshold"
+    compAttack = pF "compAttack"
+    compRelease = pF "compRelease"
+    compMakeup = pF "compMakeup"
+    compMix = pF "compMix"
+    k35Pre = pF "k35Pre"
+    k35Freq = pF "k35Freq"
+    k35Res = pF "k35Res"
+    k35Drive = pF "k35Drive"
+    k35Type = pI "k35Type"
+    k35Mix = pF "k35Mix"
+    coarseMod = pF "coarseMod"
+-- mutable synths
+    trigger = pI "trigger"
+    main = pF "main"
+    aux = pF "aux"
+    timbre = pF "timbre"
+    timbreMod = pF "timbreMod"
+    color = pF "color"
+    colorMod = pF "colorMod"
+    model = pI "model"
+    mode = pI "mode"
+    tidesshape = pF "tidesshape"
+    tidessmooth = pF "tidessmooth"
+    slope = pF "slope"
+    shift = pF "shift"
+    engine = pI "engine"
+    harm = pF "harm"
+    morph = pF "morph"
+    level = pF "level"
+    lpgdecay = pF "lpgdecay"
+    lpgcolour = pF "lpgcolour"
+    lpg d c = lpgdecay d # lpgcolour c
+    mainMod = pF "mainMod"
+    auxMod = pF "auxMod"
+    harmMod = pF "harmMod"
+    morphMod = pF "morphMod"
+-- mutable effects
+    cloudspitch = pF "cloudspitch"
+    cloudspos = pF "cloudspos"
+    cloudssize = pF "cloudssize"
+    cloudsdens = pF "cloudsdens"
+    cloudstex = pF "cloudstex"
+    cloudswet = pF "cloudswet"
+    cloudsgain = pF "cloudsgain"
+    cloudsspread = pF "cloudsspread"
+    cloudsrvb = pF "cloudsrvb"
+    cloudsfb = pF "cloudsfb"
+    cloudsfreeze = pF "cloudsfreeze"
+    cloudsmode = pF "cloudsmode"
+    cloudslofi = pF "cloudslofi"
+    clouds p s d t = cloudsgain 1 # cloudspos p # cloudssize s # cloudsdens d # cloudstex t
+    cloudsblend w s f r = cloudsgain 1 # cloudswet w # cloudsspread s # cloudsfb f # cloudsrvb r
+--
+    elementspitch = pF "elementspitch"
+    elementsstrength = pF "elementsstrength"
+    elementscontour = pF "elementscontour"
+    elementsbowlevel = pF "elementsbowlevel"
+    elementsblowlevel = pF "elementsblowlevel"
+    elementsstrikelevel = pF "elementsstrikelevel"
+    elementsflow = pF "elementsflow"
+    elementsmallet = pF "elementsmallet"
+    elementsbowtimb = pF "elementsbowtimb"
+    elementsblowtimb = pF "elementsblowtimb"
+    elementsstriketimb = pF "elementsstriketimb"
+    elementsgeom = pF "elementsgeom"
+    elementsbright = pF "elementsbright"
+    elementsdamp = pF "elementsdamp"
+    elementspos = pF "elementspos"
+    elementsspace = pF "elementsspace"
+    elementsmodel = pI "elementsmodel"
+    elementseasteregg = pI "elementseasteregg"
+--
+    mu = pF "mu"
+--
+    ringsPre = pF "ringsPre"
+    ringsMix = pF "ringsMix"
+    ringsfreq = pF "ringsfreq"
+    ringsstruct = pF "ringsstruct"
+    ringsbright = pF "ringsbright"
+    ringsdamp = pF "ringsdamp"
+    ringspos = pF "ringspos"
+    ringsmodel = pF "ringsmodel"
+    ringspoly = pI "ringspoly"
+    ringsinternal = pI "ringsinternal"
+    ringseasteregg = pI "ringseasteregg"
+    rings f s b d p = ringsfreq f # ringsstruct s # ringsbright b # ringsdamp d # ringspos p
+    ripplescf = pF "ripplescf"
+    ripplesreson = pF "ripplesreson"
+    ripplesdrive = pF "ripplesdrive"
+    ripples c r d = ripplescf c # ripplesreson r # ripplesdrive d
+--
+    verbgain = pF "verbgain"
+    verbwet = pF "verbwet"
+    verbtime = pF "verbtime"
+    verbdamp = pF "verbdamp"
+    verbhp = pF "verbhp"
+    verbfreeze = pI "verbfreeze"
+    verbdiff = pF "verbdiff"
+    verb w t d h = verbgain 1 # verbwet w # verbtime t # verbdamp d # verbhp h
+--
+    warpsalgo = pI "warpsalgo"
+    warpstimb = pF "warpstimb"
+    warpsosc = pI "warpsosc"
+    warpsfreq = pF "warpsfreq"
+    warpsvgain = pF "warpsvgain"
+    warpseasteregg = pI "warpseasteregg"
+-- SUPERFM
+-- Parameters
+    fmamp op = pF ("amp" ++ show op)
+    fmratio op = pF ("ratio" ++ show op)
+    fmdetune op = pF ("detune" ++ show op)
+    fmmod opa opb = pF ("mod" ++ show opa ++ show opb)
+    fmegrate op step = pF ("egrate" ++ show op ++ show step)
+    fmeglevel op step = pF ("eglevel" ++ show op ++ show step)
+    fmfeedback = pF "feedback"
+-- Array functions
+    fmparam function (x:xs) = foldr (#) (function 1 x) (zipWith function [2..] xs)
+    lfma = fmparam fmamp
+    lfmr = fmparam fmratio
+    lfmd = fmparam fmdetune
+    lfmer op = fmparam (fmegrate op)
+    lfmel op = fmparam (fmeglevel op)
+--

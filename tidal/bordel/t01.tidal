@@ -1,0 +1,8 @@
+setcps (160/60/4)
+
+d1
+    $ struct "1"
+    $ s "bs_sine"
+    # amp 0.1 
+
+hush
