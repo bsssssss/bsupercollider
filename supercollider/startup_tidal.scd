@@ -13,7 +13,7 @@
 	// boot the server and start SuperDirt
 	s.waitForBoot {
 		~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
-		~looper = TidalLooper(~dirt);
+		// ~looper = TidalLooper(~dirt);
 		// load("/home/bss/.local/share/SuperCollider/synthdefs/mi-ugens.scd");
 		// load("/home/bss/.local/share/SuperCollider/synthdefs/bs_synths.scd");
 		// load("/home/bss/.local/share/SuperCollider/synthdefs/bs_fx.scd");
