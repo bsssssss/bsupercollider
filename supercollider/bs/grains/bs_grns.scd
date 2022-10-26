@@ -149,7 +149,7 @@ SynthDef(\bs_grn2, {
 
 	// b  = SoundFile.collectIntoBuffers("/media/bss/mais?/sonsse/Gems/texturythmes/*", s);
 	// b = b[index];
-	b = Buffer.readChannel(s, "/media/bss/mais?/sonsse/Gems/texturythmes/waves.wav", channels: [0]);
+	b = Buffer.readChannel(s, "/media/bss/mais?/sonsse/Gems/SILOC/redio.wav", channels: [0]);
 	// b = bufnum;
 	"buffer loaded".postln;
 

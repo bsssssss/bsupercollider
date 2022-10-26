@@ -11,10 +11,10 @@ SynthDef(\bs_sine, {
 		line,
 		dur;
 
-	dur  = sustain * (end - begin);
+	dur  = sustain * (end - begin)/speed;
 
 	line     = Line.ar    (begin, end, dur, doneAction:2);
-	gainEnv  = Env.new    (levels: [0, 1, 0.77, 0], times: [0.008, 0.8, 0.1], curve:[-5, -3, 5]);
+	gainEnv  = Env.new    (levels: [0, 1, 0.77, 0], times: [0.01, 0.88, 0.1], curve:[-5, -3, 5]);
 	gain     = IEnvGen.ar (gainEnv,line);
 
 	freq     = max (0, freq * (1+ (accelerate * line)));
