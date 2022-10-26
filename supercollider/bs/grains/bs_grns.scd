@@ -232,3 +232,23 @@ SynthDef(\bs_grn2, {
 }).add;
 
 );
+
+
+
+
+
+
+
+
+(
+
+SynthDef(\bs_grn3, {
+
+    | out, sustain=1, freq=440, speed=1, begin=0, end=1, pan, accelerate, offset,
+	tFreq=33.33, overlap=2, rate=1|
+
+
+
+}).add;
+
+);
