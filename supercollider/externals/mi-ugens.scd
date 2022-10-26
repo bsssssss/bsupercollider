@@ -5,14 +5,14 @@
 (
   SynthDef(\braids, {
 	|out=0,freq=440,sustain=1,pan=0,begin=0,end=1,speed=1,accelerate=0,
-	timbre=0.5,color=0.5,model=0, pitchEnv=0, pitchEnvSpeed=1, colorEnv=0, colorSpeed=0, timbreEnv=0, timbreSpeed=0|
+	timbre=0.5,color=0.5,model=0, pitchEnv=0, pitchEnvSpeed=1, colorEnv=0, colorSpeed=1, timbreEnv=0, timbreSpeed=1|
 
 	var envLength = sustain*(end-begin)/speed;
     var line      = Line.ar(begin, end, envLength, doneAction: Done.freeSelf);
     var env       = Env.asr;
     var volume    = IEnvGen.ar(env, line);
 
-	var pitchEnvLength  = sustain*(end-begin)/speed;
+	var pitchEnvLength  = sustain*(end-begin)/pitchEnvSpeed;
     var pitchLine       = Line.ar(begin, end, pitchEnvLength);
     var pitchEnvv       = Env.asr;
     var pitchMod        = IEnvGen.ar(pitchEnvv, pitchLine);
@@ -30,16 +30,14 @@
 
 	pitchMod = (pitchMod * freq) * pitchEnv;
 
-	freq   = max(0, (freq + pitchMod) * (1 + (accelerate * line)));
-	freq = freq.wrap(0.0, SampleRate.ir/2);
+	freq     = max(0, (freq + pitchMod) * (1 + (accelerate * line)));
+	freq     = freq.clip(0.0, SampleRate.ir/2);
 
-	timbre = timbre + (timbreMod * timbreEnv);
-	timbre = timbre.wrap(0, 1);
+	timbre   = timbre + (timbreMod * timbreEnv);
+	timbre   = timbre.fold(0, 1);
 
-	color = color + (colorMod * colorEnv);
-	color = color.wrap(0, 1);
-
-
+	color    = color + (colorMod * colorEnv);
+	color    = color.fold(0, 1);
 
 	sig = MiBraids.ar (
 		pitch:  freq.cpsmidi,
