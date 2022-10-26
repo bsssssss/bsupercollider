@@ -36,7 +36,10 @@
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
 
 		// s.sync; // optionally: wait for samples to be read
-		~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
+		// ~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
+		
+		// listen osc messages from all addr
+		~dirt.start(57120, 0 ! 12, NetAddr("0.0.0.0"));   // start listening on port 57120, create two busses each sending audio to channel 0
 
         // optional, enable feedforward vu meter
         ~dirt.startSendRMS;
