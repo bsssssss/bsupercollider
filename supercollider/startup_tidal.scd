@@ -22,7 +22,7 @@
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/externals/mi-ugens.scd");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/bs_fx.scd");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/grains/bs_grns.scd");
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/modules/tidalVerb.scd");
+		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/modules/tidalVerb.scd");
 		~dirt.doNotReadYet = true; //lazy sample loading
 		~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
 		~dirt.loadSoundFiles("~/MEGA/tidal-samples/autodafe/*");
@@ -59,7 +59,7 @@
 		
 
 		// var reverbChan = ~dirt.orbits[7];
-		~dirt.orbits[7].globalEffects = ~dirt.orbits[7].globalEffects.addFirst(GlobalDirtEffect(\tidalVerb2, [\preDelay, \revTime, \lpf, \mix,\amp]));
+		// ~dirt.orbits[7].globalEffects = ~dirt.orbits[7].globalEffects.addFirst(GlobalDirtEffect(\tidalVerb, [\preDelay, \revTime, \lpf, \mix,\amp]));
             // var clouds = GlobalDirtEffect(\global_mi_clouds, [\cloudspitch, \cloudspos, \cloudssize, \cloudsdens, \cloudstex, \cloudswet, \cloudsgain, \cloudsspread, \cloudsrvb, \cloudsfb, \cloudsfreeze, \cloudsmode, \cloudslofi]);
 			// var verb = GlobalDirtEffect(\global_mi_verb, [\verbwet, \verbtime, \verbdamp, \verbhp, \verbfreeze, \verbdiff, \verbgain]);
             
@@ -67,7 +67,7 @@
 			// .addFirst(clouds);
 			// .addFirst(verb);
 			
-        ~dirt.orbits[7].initNodeTree;
+        // ~dirt.orbits[7].initNodeTree;
 		
         
         // end define global effects for mutable instruments effects

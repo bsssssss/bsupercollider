@@ -25,6 +25,7 @@ let
     curvefr c = fallCurve c # riseCurve c
 --
     grainPos = pF "grainPos"
+    grainPosRate = pF "grainPosRate"
     grainSize = pF "grainSize"
     grainRate = pF "grainRate"
     grainFreq = pF "grainFreq"
