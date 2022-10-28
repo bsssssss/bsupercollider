@@ -1,0 +1,38 @@
+
+
+
+-- random indexable
+let
+  fract :: RealFrac a => a -> a
+  fract numP = numP - (fromIntegral $ truncate numP)
+  normHash :: (RealFrac a, Floating a) => a -> a
+  normHash num = fract $ (0.5 + 0.5 * (sin $ 2*pi*num*9497923599432.89218)) * 1293984.31323
+  idxRand :: (RealFrac a, Floating a) => a -> a -> a
+  idxRand seed idx = normHash $ seed + idx
+  idxRands :: (Integral a, RealFrac b, Floating b) => a -> b -> b -> b
+  idxRands amt seed normPhasor = idxRand seed steppedPhasor
+   where steppedPhasor = fromIntegral $ floor $ normPhasor * (fromIntegral amt)
+
+    -- # n ( scale "minor" $ floor <$>(range 0 12 $ idxRands 8 123456 <$> saw))
+
+
+-- 
+import Data.Fixed (mod')
+
+whenTelse :: (Time -> Bool) -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+whenTelse test f1 f2 p = splitQueries $ p {query = apply}
+  where apply st | test (start $ arc st) = query (f1 p) st
+                  | otherwise = query (f2 p) st
+_whenmodelse :: Time -> Time -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+_whenmodelse a b = whenTelse (\t -> ((t `mod'` a) >= b ))
+whenmodelse :: Pattern Time -> Pattern Time -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+whenmodelse a b f1 f2 pat = innerJoin $ (\a' b' -> _whenmodelse a' b' f1 f2 pat) <$> a <*> b
+_everyelse :: Int -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+_everyelse 0 _ _ p = p
+_everyelse n f1 f2 p = ifp ((== 0) . (`mod` n)) f1 f2 p
+everyelse :: Pattern Int -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+everyelse tp f1 f2 p = innerJoin $ (\t -> _everyelse t f1 f2 p) <$> tp
+
+-- $ everyelse 3 (struct "1*8") (struct "[1(3,8)]*2")
+
+
