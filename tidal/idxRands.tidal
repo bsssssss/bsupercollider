@@ -1,0 +1,12 @@
+let
+  fract :: RealFrac a => a -> a
+  fract numP = numP - (fromIntegral $ truncate numP)
+  normHash :: (RealFrac a, Floating a) => a -> a
+  normHash num = fract $ (0.5 + 0.5 * (sin $ 2*pi*num*9497923599432.89218)) * 1293984.31323
+  idxRand :: (RealFrac a, Floating a) => a -> a -> a
+  idxRand seed idx = normHash $ seed + idx
+  idxRands :: (Integral a, RealFrac b, Floating b) => a -> b -> b -> b
+  idxRands amt seed normPhasor = idxRand seed steppedPhasor
+   where steppedPhasor = fromIntegral $ floor $ normPhasor * (fromIntegral amt)
+
+    -- # n ( scale "minor" $ floor <$>(range 0 12 $ idxRands 8 123456 <$> saw))

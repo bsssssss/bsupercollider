@@ -25,15 +25,15 @@
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/modules/tidalVerb.scd");
 		~dirt.doNotReadYet = true; //lazy sample loading
 		~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/autodafe/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/breaks/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/fieldrec/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/gemscut/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/goldbaby/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/jungle/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/legowelt/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/pers/*");
-		~dirt.loadSoundFiles("~/MEGA/tidal-samples/trs/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/autodafe/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/breaks/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/fieldrec/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/gemscut/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/goldbaby/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/jungle/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/legowelt/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/pers/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/trs/*");
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
 
 		// s.sync; // optionally: wait for samples to be read
