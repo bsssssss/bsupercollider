@@ -8,6 +8,7 @@ d1
         # model 7
         # color 0.8
         # colorEnv "-0.6"
+        -- # colorSpeed ""
         # timbre 0.0
         # timbreEnv "1"
         # timbreSpeed (segment 8 $choose [0.5,1,0.125])
@@ -17,7 +18,8 @@ d1
         # legato 0.5
     ]
     # sdelay 0.3 (1/(segment 8 $ rangex 12 1280 rand)) (sh 2 $ segment 8 $ rangex 0.1 0.99 rand)
-    # gain 1.2
+    # gain 0.99
+    # silence
 
 d2
     $ mask "{1 1 1 1 1 0 1 1 0 1 1 1 0}%4"
@@ -28,6 +30,7 @@ d2
     # speed 0.8
     # coarse 12
     # krush 10
+    # silence
 
 d3
     $ mask (inv "{1 1 1 1 1 <0 1> 1 1 <0 0 1> 1 1 1 0}%4")
@@ -41,6 +44,7 @@ d3
     # cut 3
     # legato 0.5
     # up (slow 1 $ segment 16 $ range 2 "-12" saw)
+    # silence
 
 d4
     $ struct "1*<8!8 16!8>"
@@ -51,6 +55,7 @@ d4
     |* amp "{1 0.5}%16"
     # coarse 4
     # gain 1.8
+    # silence
 
 d5
     $ struct "1*8"
@@ -63,8 +68,8 @@ d5
     # release 1
     # coarse 3
     # krush 2
-    -- # silence
+    # silence
 
 hush
 
-all $ slow "[2, <1>]"
+all $ slow "[<2 2 8 4>, <1 <1 1 4>>]"
