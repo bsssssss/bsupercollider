@@ -1,0 +1,70 @@
+setcps (175/60/4)
+
+d1
+    $ stack [
+        mask "{1 1 0 1 1 0 1 0 1 1 0 1 0 1}%8" $
+        struct "1*8"
+        $ s "braids"
+        # model 7
+        # color 0.8
+        # colorEnv "-0.6"
+        # timbre 0.0
+        # timbreEnv "1"
+        # timbreSpeed (segment 8 $choose [0.5,1,0.125])
+        # speed (segment 16 $ choose [1,1/2,1/3])
+        # n "<a f e a c e>"
+        |+ n "[-24, -9]"
+        # legato 0.5
+    ]
+    # sdelay 0.3 (1/(segment 8 $ rangex 12 1280 rand)) (sh 2 $ segment 8 $ rangex 0.1 0.99 rand)
+    # gain 1.2
+
+d2
+    $ mask "{1 1 1 1 1 0 1 1 0 1 1 1 0}%4"
+    $ struct "1*<8!16 4!8>"
+    $ n (run "<8!4 7!4>")
+    |% n 3
+    # s "Electro-Harmonix_DRM-15"
+    # speed 0.8
+    # coarse 12
+    # krush 10
+
+d3
+    $ mask (inv "{1 1 1 1 1 <0 1> 1 1 <0 0 1> 1 1 1 0}%4")
+    $ struct "1*<16!16 8!8>"
+    $ n (run 5)
+    |% n "<5>"
+    |+ n 2
+    # s "Electro-Harmonix_DRM-15"
+    # speed 0.125
+    # coarse 3
+    # cut 3
+    # legato 0.5
+    # up (slow 1 $ segment 16 $ range 2 "-12" saw)
+
+d4
+    $ struct "1*<8!8 16!8>"
+    $ s "808hh"
+    # n 4
+    # legato 1
+    # amp 1
+    |* amp "{1 0.5}%16"
+    # coarse 4
+    # gain 1.8
+
+d5
+    $ struct "1*8"
+    $ degradeBy 0.3
+    $ n (slow 2 $ run $ choose [35,13,7,5,8])
+    |% n "<5>"
+    |+ n "<0 0 <1 2> <1 2 3>>"
+    # s "[angles,<<amn1 <~ arena>> ~>, fau]"
+    # unit "c" # speed 8
+    # release 1
+    # coarse 3
+    # krush 2
+    -- # silence
+
+hush
+
+all $ slow "[2, <1>]"
