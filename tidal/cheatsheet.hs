@@ -1,3 +1,8 @@
+-- http://learnyouahaskell.com/chapters
+
+
+
+
 -- Haskell is a functional programming language
 -- Everything is immutable so once a value is set it is set forever
 -- Functions can be passed as a parameter to other functions 
@@ -296,7 +301,7 @@ whatAge x = "Nothing Important"
 factorial :: Int -> Int
 
 -- If 0 return a 1 (Recursive Function)
-factorial 0 = 1
+factorial 0 = 1     
 factorial n = n * factorial (n - 1)
 
 -- 3 * factorial (2) : 6
@@ -347,7 +352,7 @@ getListItems (x:xs) = "The first item is " ++ show x ++ " and the rest are "
 	
 -- We can also get values with an As pattern
 getFirstItem :: String -> String
-getFirstItem [] = "Empty String"
+getFirstItem [] = "Empty String" 
 getFirstItem all@(x:xs) = "The first letter in " ++ all ++ " is "
 	++ [x]
 	

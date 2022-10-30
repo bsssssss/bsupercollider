@@ -54,6 +54,10 @@
 			~d10 = ~dirt.orbits[9]; ~d11 = ~dirt.orbits[10]; ~d12 = ~dirt.orbits[11];
 		);
 
+		MIDIClient.init;
+		~midiOut = MIDIOut.newByName("Midi Through", "Midi Through Port-0"); // substitute your own device here
+
+		~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 		// define global effects for mutable instruments effects
         // var tidalVerb = ;
 		
