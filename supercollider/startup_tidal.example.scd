@@ -8,7 +8,7 @@
 	s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 	s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
     s.options.maxLogins = 8; // optional, required to enable feedforward VU meter
-	"SC_JACK_DEFAULT_OUTPUTS".setenv("system:playback_1,system:playback_2");
+	"SC_JACK_DEFAULT_OUTPUTS".setenv("system:playback_7,system:playback_8");
 
 	// boot the server and start SuperDirt
 	s.waitForBoot {

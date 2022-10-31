@@ -18,7 +18,7 @@ let
 
 -- 
 import Data.Fixed (mod')
-
+--
 whenTelse :: (Time -> Bool) -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
 whenTelse test f1 f2 p = splitQueries $ p {query = apply}
   where apply st | test (start $ arc st) = query (f1 p) st
