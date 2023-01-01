@@ -1,19 +1,99 @@
 let
-    midi x = s "midi" # midichan x
+    lock n offset = timeLoop n . ((offset |- (slow n $ run n)) <~)
+    slide x = accelerate (2 **| (x |/ 12) - 1)
+    midi x = s "midi" # midichan (x-1)
     sh x p = (<~) x $ p
+--    
+    xenscale n = map (\x -> x / n * 12) [0..(n-1)]
+    xen n p = toScale (xenscale n) p
+-- bs_rongs
+    structure = pF "structure"
+    brightness = pF "brightness" 
+    damping = pF "damping"
+    accent = pF "accent"
+    harmonicStretch = pF "harmonicStretch"
+    position = pF "position"
+    loss = pF "loss"
+-- JPVERB
+    jverbWet = pF "jverbWet"
+    jverbTime = pF "jverbTime"
+    jverbDamp = pF "jverbDamp"
+    jverbSize = pF "jverbSize"
+    jverbEarly = pF "jverbEarly"
+    jverbModDepth = pF "jverbModDepth"
+    jverbModFreq = pF "jverbModFreq"
+    jverbLow = pF "jverbLow"
+    jverbMid = "jverbMid"
+    jverbHigh = pF "jverbHigh"
+    jverbLo = pF "jverbLo"
+    jverbHi = pF "jverbHi"
+    jverbGain = pF "jverbGain"
 --
     tilt = pF "tilt"
     plat = pF "plat"
     curve = pF "curve"
+--
     mod s t r1 r2 w = (sh s $ segment t $ range r1 r2 $ w)
     modex s t r1 r2 w = (sh s $ segment t $ rangex r1 r2 $ w)
 --
+    portamentoCurve = pF "portamentoCurve"
+    portamento = pF "portamento"
     pitchEnv = pF "pitchEnv"
     pitchEnvSpeed = pF "pitchEnvSpeed"
+    pitchLfoRate = pF "pitchLfoRate"
+    pitchLfoPw = pF "pitchLfoPw"
+    pitchLfoWs = pF "pitchLfoWs"
+    pitchLfoAmp = pF "pitchLfoAmp"
+    --
+    colorFrom = pF "colorFrom"
+    colorTo = pF "colorTo"
     colorEnv = pF "colorEnv"
+    colorCurve = pF "colorCurve"
     colorSpeed = pF "colorSpeed"
+    colorLfoRate = pF "colorLfoRate"
+    colorLfoAmp = pF "colorLfoAmp"
+    colorLfoPhase = pF "colorLfoPhase"
+    colorLfoShape = pF "colorLfoShape" 
+    colorMod f t s c = colorFrom f # colorTo t # colorSpeed s # colorCurve c
+    colorLfo r a s = colorLfoRate r # colorLfoAmp a # colorLfoShape s
+--
+    timbreFrom = pF "timbreFrom"
+    timbreTo = pF "timbreTo"
     timbreEnv = pF "timbreEnv"
     timbreSpeed = pF "timbreSpeed"
+    timbreLfoRate = pF "timbreLfoRate"
+    timbreLfoPhase = pF "timbreLfoPhase"
+    timbreLfoAmp = pF "timbreLfoAmp"
+    timbreLfoShape = pF "timbreLfoShape"
+    timbreCurve = pF "timbreCurve"
+    timbreLfo r a s = timbreLfoRate r # timbreLfoAmp a # timbreLfoShape s
+    timbreMod f t s c = timbreFrom f # timbreTo t # timbreSpeed s # timbreCurve c
+--
+    harmFrom = pF "harmFrom"
+    harmTo = pF "harmTo"
+    harmEnv = pF "harmEnv"
+    harmSpeed = pF "harmSpeed"
+    harmLfoRate = pF "harmLfoRate"
+    harmLfoPhase = pF "harmLfoPhase"
+    harmLfoAmp = pF "harmLfoAmp"
+    harmCurve = pF "harmCurve"
+    harmLfoShape = pF "harmLfoShape"
+    harmLfo r a s = harmLfoRate r # harmLfoAmp a # harmLfoShape s
+    harmMod f t s c = harmFrom f # harmTo t # harmSpeed s # harmCurve c
+--
+    morphFrom = pF "morphFrom"
+    morphTo = pF "morphTo"
+    morphEnv = pF "morphEnv"
+    morphSpeed = pF "morphSpeed"
+    morphLfoRate = pF "morphLfoRate"
+    morphLfoPhase = pF "morphLfoPhase"
+    morphLfoAmp = pF "morphLfoAmp"
+    morphCurve = pF "morphCurve"
+    morphLfoShape = pF "morphLfoShape" 
+    morphLfo r a s = morphLfoRate r # morphLfoAmp a # morphLfoShape s
+    morphMod f t s c = morphFrom f # morphTo t # morphSpeed s # morphCurve c
+--
+    envMode = pF "envMode"
 -- 
     fall = pF "fall"
     fallRate = pF "fallRate"
@@ -84,10 +164,10 @@ let
     main = pF "main"
     aux = pF "aux"
     timbre = pF "timbre"
-    timbreMod = pF "timbreMod"
+    -- timbreMod = pF "timbreMod"
     color = pF "color"
-    colorMod = pF "colorMod"
-    model = pI "model"
+    -- colorMod = pF "colorMod"
+    model = pF "model"
     mode = pI "mode"
     tidesshape = pF "tidesshape"
     tidessmooth = pF "tidessmooth"
@@ -100,10 +180,10 @@ let
     lpgdecay = pF "lpgdecay"
     lpgcolour = pF "lpgcolour"
     lpg d c = lpgdecay d # lpgcolour c
-    mainMod = pF "mainMod"
-    auxMod = pF "auxMod"
-    harmMod = pF "harmMod"
-    morphMod = pF "morphMod"
+    -- mainMod = pF "mainMod"
+    -- auxMod = pF "auxMod"
+    -- harmMod = pF "harmMod"
+    -- morphMod = pF "morphMod"
 -- mutable effects
     cloudspitch = pF "cloudspitch"
     cloudspos = pF "cloudspos"
@@ -166,6 +246,7 @@ let
     verbhp = pF "verbhp"
     verbfreeze = pI "verbfreeze"
     verbdiff = pF "verbdiff"
+    verbsend = pF "verbsend"
     verb w t d h = verbgain 1 # verbwet w # verbtime t # verbdamp d # verbhp h
 --
     warpsalgo = pI "warpsalgo"
@@ -191,3 +272,12 @@ let
     lfmer op = fmparam (fmegrate op)
     lfmel op = fmparam (fmeglevel op)
 --
+    oscA = pF "oscA" 
+    oscB = pF "oscB"  
+    runA = pF "runA" 
+    runB = pF "runB" 
+    runF = pF "runF" 
+    runOut = pF "runOut" 
+    res = pF "res" 
+    offset = pF "offset" 
+    loop = pF "loop" 

@@ -1,0 +1,15 @@
+-- Parameters
+let fmamp op = pF ("amp" ++ show op)
+    fmratio op = pF ("ratio" ++ show op)
+    fmdetune op = pF ("detune" ++ show op)
+    fmmod opa opb = pF ("mod" ++ show opa ++ show opb)
+    fmegrate op step = pF ("egrate" ++ show op ++ show step)
+    fmeglevel op step = pF ("eglevel" ++ show op ++ show step)
+    fmfeedback = pF "feedback"
+-- Array functions
+    fmparam function (x:xs) = foldr (#) (function 1 x) (zipWith function [2..] xs)
+    lfma = fmparam fmamp
+    lfmr = fmparam fmratio
+    lfmd = fmparam fmdetune
+    lfmer op = fmparam (fmegrate op)
+    lfmel op = fmparam (fmeglevel op)

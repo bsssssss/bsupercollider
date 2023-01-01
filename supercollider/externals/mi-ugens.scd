@@ -3,41 +3,240 @@
 // installer classes d'abord!!
 
 (
-  SynthDef(\braids, {
-	|out=0,freq=440,sustain=1,pan=0,begin=0,end=1,speed=1,accelerate=0,
-	timbre=0.5,color=0.5,model=0, pitchEnv=0, pitchEnvSpeed=1, colorEnv=0, colorSpeed=1, timbreEnv=0, timbreSpeed=1|
+SynthDef(\braids2, {
 
-	var envLength = sustain*(end-begin)/speed;
-    var line      = Line.ar(begin, end, envLength, doneAction: Done.freeSelf);
-    var env       = Env.asr;
-    var volume    = IEnvGen.ar(env, line);
+	| out=0, freq=440, sustain=1, pan=0, begin=0, end=1, speed=1, accelerate=0, cps=0.5,
+	envMode=0,
+	model=0,
+	timbre=0.5, timbreFrom=0, timbreTo=0, timbreSpeed=1, timbreCurve=0,
+	timbreLfoRate=1, timbreLfoAmp=0, timbreLfoShape=1,
+	color =0.5, colorFrom=0, colorTo=0, colorSpeed=1, colorCurve=0,
+	colorLfoRate =1, colorLfoAmp =0, colorLfoShape=1,
+	vibratoRate=8, vibratoDepth=0|
 
-	var pitchEnvLength  = sustain*(end-begin)/pitchEnvSpeed;
-    var pitchLine       = Line.ar(begin, end, pitchEnvLength);
-    var pitchEnvv       = Env.asr;
-    var pitchMod        = IEnvGen.ar(pitchEnvv, pitchLine);
-
-	var colorEnvLength  = sustain*(end-begin)/colorSpeed;
-    var colorLine       = Line.ar(begin, end, colorEnvLength);
-    var colorEnvv       = Env.asr;
-    var colorMod        = IEnvGen.ar(colorEnvv, colorLine);
-
-	var timbreEnvLength = sustain*(end-begin)/timbreSpeed;
-    var timbreLine      = Line.ar(begin, end, timbreEnvLength);
-    var timbreEnvv      = Env.asr;
-    var timbreMod       = IEnvGen.ar(timbreEnvv, timbreLine);
 	var sig;
 
-	pitchMod = (pitchMod * freq) * pitchEnv;
+	var envLength = sustain*(end-begin)/speed;
+	var line      = Line.ar(begin, end, envLength, doneAction: Done.freeSelf);
+	// var env       = Env.asr;
+	var env       = Env([0, 1, 0, 0], [0.01,0.986,0.008], [5,-5,5]);
+	var env2      = Env([0, 1, 1, 0], [0.008,0.986,0.008]);
+	var volume    = Select.kr(envMode, [IEnvGen.ar(env, line), IEnvGen.ar(env2, line)]);
 
-	freq     = max(0, (freq + pitchMod) * (1 + (accelerate * line)));
-	freq     = freq.clip(0.0, SampleRate.ir/2);
+	Env([0, 1, 0, 0], [0.01,0.986,0.008], [5,-5,5]).plot;
 
-	timbre   = timbre + (timbreMod * timbreEnv);
-	timbre   = timbre.fold(0, 1);
+	var timbreLength = sustain*(end-begin)/timbreSpeed;
+	var timbreLine   = Line.ar(begin, end, timbreLength);
+	var timbreEnv    = Env.new(
+		levels: [0, timbreFrom, timbreTo],
+		times:  [0, 1, 0],
+		curve:  [0, timbreCurve, 0]
+	);
+	var timbreLfo = Select.kr (timbreLfoShape, [
+		SinOsc.ar  (freq: cps*timbreLfoRate, add: 1)/2,
+		LFTri.ar   (freq: cps*timbreLfoRate, add: 1)/2,
+		LFSaw.ar   (freq: cps*timbreLfoRate, add: 1)/2,
+		LFPulse.ar (freq: cps*timbreLfoRate, add: 0),
+	]);
 
-	color    = color + (colorMod * colorEnv);
-	color    = color.fold(0, 1);
+	var colorLength = sustain*(end-begin)/colorSpeed;
+	var colorLine   = Line.ar(begin, end, colorLength);
+	var colorEnv    = Env.new(
+		levels: [0, colorFrom, colorTo],
+		times:  [0, 1, 0],
+		curve:  [0, colorCurve, 0]
+	);
+	var colorLfo = Select.kr (colorLfoShape, [
+		SinOsc.ar  (freq: cps*colorLfoRate, add: 1)/2,
+		LFTri.ar   (freq: cps*colorLfoRate, add: 1)/2,
+		LFSaw.ar   (freq: cps*colorLfoRate, add: 1)/2,
+		LFPulse.ar (freq: cps*colorLfoRate, add: 0),
+	]);
+
+	freq   = max(0, (freq) * (1 + (accelerate * line)));
+	freq   = freq + (SinOsc.ar(freq: vibratoRate * cps) * vibratoDepth);
+	freq   = freq.cpsmidi;
+
+	timbre = IEnvGen.ar(timbreEnv, timbreLine)+timbre;
+	timbre = timbre + (timbreLfo*timbreLfoAmp);
+	timbre = timbre.clip(0, 1);
+
+	color  = IEnvGen.ar(colorEnv, colorLine)+color;
+	color  = color + (colorLfo*colorLfoAmp);
+	color  = color.clip(0, 1);
+
+	sig = MiBraids.ar (
+		pitch:  freq,
+		timbre: timbre,
+		color:  color,
+		model:  model
+	);
+	Out.ar(out, DirtPan.ar(sig * 0.33, ~dirt.numChannels, pan, volume));
+}).add;
+);
+
+
+
+(
+  SynthDef(\plaits2, {
+
+	|out=0, freq=440, sustain=1, pan=0, begin=0, end=1, speed=1, accelerate=0, cps=0.5,
+	envMode=0,
+	model=0,
+	timbre=0.5, timbreFrom=0, timbreTo=0, timbreSpeed=1, timbreCurve=1, timbreLfoRate=1, timbreLfoAmp=0,
+	timbreLfoShape=1,
+	harm=0.5, harmFrom=0, harmTo=0, harmSpeed=1, harmCurve=1, harmLfoRate=1, harmLfoAmp=0,
+	harmLfoShape=1,
+	morph=0.5, morphFrom=0, morphTo=0, morphSpeed=1, morphCurve=1, morphLfoRate=1, morphLfoAmp=0,
+	morphLfoShape=1,
+	level=1, lpgdecay=0, lpgcolour=0,
+	main=1,
+	aux=0,
+	pitchModAmp=0, pitchModRate=1, pitchModCurve=(-5),
+	trig=0|
+
+    var osc;
+	var sig;
+	var pitchMod;
+
+    var envLength = sustain*(end-begin)/speed;
+    var line      = Line.ar(begin, end, envLength, doneAction: Done.freeSelf);
+	var env 	  = Env.asr;
+	var env2      = Env([0, 1, 1, 0], [0.01,0.98,0.01]);
+	var volume    = Select.kr(envMode, [IEnvGen.ar(env, line), IEnvGen.ar(env2, line)]);
+
+	var timbreLength = sustain*(end-begin)/timbreSpeed;
+	var timbreLine   = Line.ar(begin, end, timbreLength);
+	var timbreEnv    = Env.new(
+		levels: [0, timbreFrom, timbreTo],
+		times:  [0, 1, 0],
+		curve:  [0, timbreCurve, 0]
+	);
+	var timbreLfo = Select.kr (timbreLfoShape, [
+		SinOsc.ar  (freq: cps*timbreLfoRate, add: 1)/2,
+		LFTri.ar   (freq: cps*timbreLfoRate, add: 1)/2,
+		LFSaw.ar   (freq: cps*timbreLfoRate, add: 1)/2,
+		LFPulse.ar (freq: cps*timbreLfoRate, add: 0),
+	]);
+
+	var harmLength = sustain*(end-begin)/harmSpeed;
+	var harmLine   = Line.ar(begin, end, harmLength);
+	var harmEnv    = Env.new(
+		levels: [0, harmFrom, harmTo],
+		times:  [0, 1, 0],
+		curve:  [0, harmCurve, 0]
+	);
+	var harmLfo = Select.kr (harmLfoShape, [
+		SinOsc.ar  (freq: cps*harmLfoRate, add: 1)/2,
+		LFTri.ar   (freq: cps*harmLfoRate, add: 1)/2,
+		LFSaw.ar   (freq: cps*harmLfoRate, add: 1)/2,
+		LFPulse.ar (freq: cps*harmLfoRate, add: 0),
+	]);
+
+	var morphLength = sustain*(end-begin)/morphSpeed;
+	var morphLine   = Line.ar(begin, end, morphLength);
+	var morphEnv    = Env.new(
+		levels: [0, morphFrom, morphTo],
+		times:  [0, 1, 0],
+		curve:  [0, morphCurve, 0]
+	);
+	var morphLfo = Select.kr (morphLfoShape, [
+		SinOsc.ar  (freq: cps*morphLfoRate, add: 1)/2,
+		LFTri.ar   (freq: cps*morphLfoRate, add: 1)/2,
+		LFSaw.ar   (freq: cps*morphLfoRate, add: 1)/2,
+		LFPulse.ar (freq: cps*morphLfoRate, add: 0),
+	]);
+
+	timbre = IEnvGen.ar(timbreEnv, timbreLine)+timbre;
+	timbre = timbre + (timbreLfo*timbreLfoAmp);
+	timbre = timbre.clip(0, 1);
+
+	harm = IEnvGen.ar(harmEnv, harmLine)+harm;
+	harm = harm + (harmLfo*harmLfoAmp);
+	harm = harm.clip(0, 1);
+
+	morph = IEnvGen.ar(morphEnv, morphLine)+morph;
+	morph = morph + (morphLfo*morphLfoAmp);
+	morph = morph.clip(0, 1);
+
+	pitchMod = EnvGen.ar (Env.new (
+		levels: [0, freq, 0],
+		times:  [0, 0.1 * (1 / pitchModRate), 0],
+		curve:  [1, pitchModCurve, -5])) * pitchModAmp;
+
+	freq = max(0, (freq + pitchMod) * (1 + (accelerate * line.fold(0, 1))));
+
+	osc = MiPlaits.ar(
+		// trigger:    trigg,
+		pitch:      freq.cpsmidi,
+		timbre:     timbre,
+		harm:       harm,
+		engine:     model,
+		morph:      morph,
+		level:      level,
+		decay:      lpgdecay,
+		lpg_colour: lpgcolour,
+    );
+
+	sig = Mix.ar (DirtPan.ar (osc, ~dirt.numChannels, -1) * main
+		       + (DirtPan.ar (osc, ~dirt.numChannels,  1) * aux));
+
+    Out.ar(out, DirtPan.ar(sig * volume, ~dirt.numChannels, pan, volume*0.3));
+  }).add;
+);
+
+
+
+(
+
+SynthDef(\braids, {
+
+	|out=0, freq=440, sustain=1, pan=0, begin=0, end=1, speed=1, accelerate=0, cps=0.5,
+	timbre=0.5, color=0.5, model=0, pitchEnv=0, pitchEnvSpeed=1, pitchLfoRate=1, pitchLfoPhase=0, pitchLfoAmp=0,  colorEnv=0, colorSpeed=1, colorLfoRate=1, colorLfoAmp=0, colorLfoPhase=0, timbreLfoRate=1, timbreLfoAmp=0, timbreLfoPhase=0, timbreEnv=0, timbreSpeed=1, envMode=0|
+
+	var envLength       = sustain*(end-begin)/speed;
+	var line            = Line.ar(begin, end, envLength, doneAction: Done.freeSelf);
+	var env             = Env.asr;
+	var env2            = Env([0, 1, 1, 0], [0.01,0.98,0.01]);
+	var volume          = IEnvGen.ar(env2, line);
+
+	var pitchEnvLength  = sustain*(end-begin)/pitchEnvSpeed;
+	var pitchLine       = Line.ar(begin, end, pitchEnvLength);
+	var pitchEnvv       = Env.asr;
+	var pitchMod        = IEnvGen.ar(pitchEnvv, pitchLine);
+	var pitchLfo        = SinOsc.ar(cps * pitchLfoRate, pitchLfoPhase);
+
+	var colorEnvLength  = sustain*(end-begin)/colorSpeed;
+	var colorLine       = Line.ar(begin, end, colorEnvLength);
+	var colorEnvv       = Env.asr;
+	var colorMod        = IEnvGen.ar(colorEnvv, colorLine);
+	var colorLfo        = SinOsc.ar(cps * colorLfoRate, colorLfoPhase).abs;
+
+	var timbreEnvLength = sustain*(end-begin)/timbreSpeed;
+	var timbreLine      = Line.ar(begin, end, timbreEnvLength);
+	var timbreEnvv      = Env.asr;
+	var timbreMod       = IEnvGen.ar(timbreEnvv, timbreLine);
+	var timbreLfo       = SinOsc.ar(cps * timbreLfoRate, timbreLfoPhase);
+
+	var sig;
+
+	pitchLfo  = pitchLfo * pitchLfoAmp;
+	colorLfo  = colorLfo * colorLfoAmp;
+	timbreLfo = timbreLfo * timbreLfoAmp;
+
+	pitchMod  = (pitchMod * freq) * pitchEnv;
+	pitchMod  = pitchMod + pitchLfo;
+
+	freq      = max(0, (freq + pitchMod) * (1 + (accelerate * line)));
+	freq      = freq.clip(0.0, SampleRate.ir/2);
+
+	timbre    = timbre + (timbreMod * timbreEnv);
+	timbre    = timbre + timbreLfo;
+	timbre    = timbre.clip(0,1);
+
+	color     = color + (colorMod * colorEnv);
+	color     = color + colorLfo;
+	color     = color.clip(0,1);
 
 	sig = MiBraids.ar (
 		pitch:  freq.cpsmidi,
@@ -46,20 +245,10 @@
 		model:  model
 	);
 
-    Out.ar(out, DirtPan.ar(sig*0.33, ~dirt.numChannels, pan, volume));
-  }).add;
+	Out.ar(out, DirtPan.ar(sig*0.33, ~dirt.numChannels, pan, volume));
+}).add;
+
 );
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -134,8 +323,7 @@
 (
   SynthDef(\plaits, {
 
-	|out=0, freq=440, sustain=1, pan=0,
-	begin=0, end=1, speed=1, accelerate=0,
+	|out=0, freq=440, sustain=1, pan=0, begin=0, end=1, speed=1, accelerate=0,
 	timbre=0.5, timbreMod=0, engine=0, harm=0.5, morph=0.5,
 	level=1, lpgdecay=0, lpgcolour=0,
 	main=1, mainMod=0, aux=0, auxMod=0, pitchModAmp=0, pitchModRate=1, pitchModCurve=(-5), trig=0, harmMod=0, morphMod=0|
@@ -179,12 +367,12 @@
 		lpg_colour: lpgcolour,
     );
 
-	sig = Mix.ar (DirtPan.ar(osc, ~dirt.numChannels, -1) * main + (DirtPan.ar (osc, ~dirt.numChannels, 1) * aux));
+	sig = Mix.ar (DirtPan.ar (osc, ~dirt.numChannels, -1) * main
+		       + (DirtPan.ar (osc, ~dirt.numChannels,  1) * aux));
 
     Out.ar(out, DirtPan.ar(sig * volume, ~dirt.numChannels, pan, volume*0.4));
   }).add;
 );
-
 
 
 
@@ -200,11 +388,11 @@
 
     freq = max(0, freq * speed * (1 + (accelerate * line)));
     sig = MiTides.ar(
-      freq: freq,
-      shape: tidesshape,
-      slope: slope,
+      freq:   freq,
+      shape:  tidesshape,
+      slope:  slope,
       smooth: tidessmooth,
-      shift: shift,
+      shift:  shift,
       output_mode: mode,
       ramp_mode: 1,
       rate: 1
@@ -345,9 +533,10 @@ SynthDef("rings" ++ ~dirt.numChannels, {
 	// var env       = Env.new    (levels: [0, 1, 0.77, 0], times: [0.0098, 0.6, 0.2], curve:[-5, -3, 5]);
 	// var volume    = IEnvGen.ar(env, line);
 
+	signalDry = signalDry * ringsPre;
 
 	signal = MiRings.ar(
-    in:             signalDry * ringsPre,
+    in:             signalDry,
     trig:           ringsinternal,
     pit:            ringsfreq.cpsmidi,
     struct:         ringsstruct,
@@ -442,25 +631,30 @@ SynthDef("warps" ++ ~dirt.numChannels, { |out, warpsalgo=0, warpstimb=0, warpsos
 );
 
 
-
-
-
 (
 
 (1..SuperDirt.maxSampleNumChannels).do { |numChannels|
 
-  SynthDef("global_mi_verb" ++ numChannels, { |dryBus, effectBus, verbwet=0, verbtime=0, verbdamp=0, verbhp=0, verbfreeze=0, verbdiff=0.625, verbgain=0|
-    var signal = In.ar(dryBus, ~dirt.numChannels);
-    Out.ar(effectBus, MiVerb.ar(
-      signal,
-      verbtime,
-      verbwet,
-      verbdamp,
-      verbhp,
-      verbfreeze,
-      verbdiff
-    ) * verbgain);
-  }, [\ir, \ir]).add;
+	SynthDef("global_mi_verb" ++ numChannels, { |dryBus, effectBus, verbwet=0, verbtime=0, verbdamp=0, verbhp=0, verbfreeze=0, verbdiff=0.625, verbgain=0, verbsend=1|
+		var signal = In.ar(dryBus, ~dirt.numChannels);
+
+		Out.ar(effectBus, MiVerb.ar(
+			signal,
+			verbtime,
+			verbwet,
+			verbdamp,
+			verbhp,
+			verbfreeze,
+			verbdiff
+		) * verbgain);
+
+		// DetectSilence.ar(effectBus, doneAction:2);
+		DirtPause.ar(effectBus, graceTime:4);
+
+	}, [\ir, \ir]).add;
+
+
+
 
   SynthDef("global_mi_clouds" ++ numChannels, { |dryBus, effectBus, cloudspitch=0, cloudspos=0, cloudssize=0, cloudsdens=0, cloudstex=0, cloudswet=0, cloudsgain=0, cloudsspread=0, cloudsrvb=0, cloudsfb=0, cloudsfreeze=0, cloudsmode=0, cloudslofi=0|
     var signal = In.ar(dryBus, ~dirt.numChannels);

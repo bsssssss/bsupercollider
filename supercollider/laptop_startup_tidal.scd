@@ -8,7 +8,7 @@
 	s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 	s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
     s.options.maxLogins = 8; // optional, required to enable feedforward VU meter
-	"SC_JACK_DEFAULT_OUTPUTS".setenv("system:playback_7,system:playback_8");
+	"SC_JACK_DEFAULT_OUTPUTS".setenv("system:playback_1,system:playback_2");
 
 	// boot the server and start SuperDirt
 	s.waitForBoot {
@@ -18,22 +18,30 @@
 		// load("/home/bss/.local/share/SuperCollider/synthdefs/bs_synths.scd");
 		// load("/home/bss/.local/share/SuperCollider/synthdefs/bs_fx.scd");
 		// load("/home/bss/.local/share/SuperCollider/synthdefs/bs_grns.scd");
-        load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/synths/config.scd");
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/externals/mi-ugens.scd");
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/bs_fx.scd");
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/grains/bs_grns.scd");
-		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/modules/tidalVerb.scd");
+		// load("/home/max/git/bsupercollider/supercollider/externals/mi-ugens.scd");
+		// load("/home/max/git/bsupercollider/supercollider/bs/synths/config.scd");
+		// load("/home/max/git/bsupercollider/supercollider/bs/fx/bs_fx.scd");
 		// ~dirt.doNotReadYet = true; //lazy sample loading
-		~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
+        load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/synths/config.scd");
+		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/config.scd");
+		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/grains/bs_grns.scd");
+		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/externals/mi-ugens.scd");
+		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/modules/tidalVerb.scd");
+		// ~dirt.doNotReadYet_(true);
+		// ~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/autodafe/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/breaks/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/fieldrec/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/gemscut/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/goldbaby/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/jungle/*");
+		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/trs/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/legowelt/*");
 		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/pers/*");
-		~dirt.loadSoundFiles("~/cloud-samples/tidal-samples/trs/*");
+		// ~dirt.loadSoundFiles("~/git/kindohm/expedition/samples/*");
+		~dirt.loadSoundFiles("~/Music/internat/*");
+		// ~dirt.loadSoundFiles("~/Music/vsco/*");
+		// ~dirt.loadSoundFiles("~/Music/breakcore is not a good way to get laid/*");
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
 
 		// s.sync; // optionally: wait for samples to be read
@@ -54,22 +62,22 @@
 			~d10 = ~dirt.orbits[9]; ~d11 = ~dirt.orbits[10]; ~d12 = ~dirt.orbits[11];
 		);
 
-		// define global effects for mutable instruments effects
-        // var tidalVerb = ;
-		
+		MIDIClient.init;
+		~midiOut = MIDIOut.newByName("Midi Through", "Midi Through Port-0"); // substitute your own device here
 
-		// var reverbChan = ~dirt.orbits[7];
-		// ~dirt.orbits[7].globalEffects = ~dirt.orbits[7].globalEffects.addFirst(GlobalDirtEffect(\tidalVerb, [\preDelay, \revTime, \lpf, \mix,\amp]));
+		~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
+
+		        // define global effects for mutable instruments effects
+        ~dirt.orbits.do { |x|
             // var clouds = GlobalDirtEffect(\global_mi_clouds, [\cloudspitch, \cloudspos, \cloudssize, \cloudsdens, \cloudstex, \cloudswet, \cloudsgain, \cloudsspread, \cloudsrvb, \cloudsfb, \cloudsfreeze, \cloudsmode, \cloudslofi]);
-			// var verb = GlobalDirtEffect(\global_mi_verb, [\verbwet, \verbtime, \verbdamp, \verbhp, \verbfreeze, \verbdiff, \verbgain]);
-            
-			
-			// .addFirst(clouds);
-			// .addFirst(verb);
-			
-        // ~dirt.orbits[7].initNodeTree;
-		
-        
+            var verb = GlobalDirtEffect(\global_mi_verb, [\verbwet, \verbtime, \verbdamp, \verbhp, \verbfreeze, \verbdiff, \verbgain]);
+			var jpverb = GlobalDirtEffect(\global_jpverb, [\jverbTime, \jverbDamp, \jverbSize, \jverbEarly, \jverbModDepth, \jverbModFreq, \jverbLow, \jverbMid, \jverbHigh, \jverbLo, \jverbHi, \jverbGain]);
+            x.globalEffects = x.globalEffects
+            //   .addFirst(clouds)
+              .addFirst(verb)
+			  .addFirst(jpverb); 
+            x.initNodeTree;    
+        };                     
         // end define global effects for mutable instruments effects
 	};
 

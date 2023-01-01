@@ -1,0 +1,21 @@
+
+-- conditionals
+d1
+    $ while ((> 0.4) <$> (
+        fast 1 
+        $ segment 8 
+        $ idxRands 8 111 
+        <$> saw)) 
+        (|* gain 1)
+
+-- granular
+d1 
+    $ trigger 1 
+    $ (
+        slow 12 
+        $ chop 128 
+        $ s "legdx"
+        )
+  |- begin "0.002"
+  |+ end "0.002"
+  # tilt 0.5

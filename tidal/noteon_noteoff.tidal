@@ -1,0 +1,19 @@
+import Data.Maybe (fromJust)
+
+eventHasOffset :: Event a -> Bool
+eventHasOffset e | isAnalog e = False
+                 | otherwise = stop (fromJust $ whole e) == stop (part e)
+
+offsets :: Pattern a -> Pattern a
+offsets pat = withEvent f $ filterEvents eventHasOffset pat
+  where f (e@(Event _ Nothing _ _)) = e -- ignore analog events
+        f (Event c (Just (Arc b e)) _ v) = Event c (Just a) a v
+           where a = Arc e (e + (e - b))
+
+cmd = pS "cmd"
+
+noteonoff pat = stack [pat # cmd "noteon", offsets pat # cmd "noteoff"]
+
+rn2 pat = stack [pat, offsets pat # vel 0] 
+
+-- d1 $ noteonoff (note "a b")

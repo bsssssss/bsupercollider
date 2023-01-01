@@ -16,23 +16,38 @@ let
     -- # n ( scale "minor" $ floor <$>(range 0 12 $ idxRands 8 123456 <$> saw))
 
 
--- 
-import Data.Fixed (mod')
---
-whenTelse :: (Time -> Bool) -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
-whenTelse test f1 f2 p = splitQueries $ p {query = apply}
-  where apply st | test (start $ arc st) = query (f1 p) st
-                  | otherwise = query (f2 p) st
-_whenmodelse :: Time -> Time -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
-_whenmodelse a b = whenTelse (\t -> ((t `mod'` a) >= b ))
-whenmodelse :: Pattern Time -> Pattern Time -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
-whenmodelse a b f1 f2 pat = innerJoin $ (\a' b' -> _whenmodelse a' b' f1 f2 pat) <$> a <*> b
-_everyelse :: Int -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
-_everyelse 0 _ _ p = p
-_everyelse n f1 f2 p = ifp ((== 0) . (`mod` n)) f1 f2 p
-everyelse :: Pattern Int -> (Pattern a -> Pattern a) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
-everyelse tp f1 f2 p = innerJoin $ (\t -> _everyelse t f1 f2 p) <$> tp
+-- note stuff 
 
--- $ everyelse 3 (struct "1*8") (struct "[1(3,8)]*2")
+let
+  whensmod dt len pivot f p = fast dt $ whenmod len pivot f $ slow dt p
+  whensmod' dt len pivot f p = fast dt $ whenmod len pivot ((slow dt).(const p)) $ slow dt (f p)
+  octceil by upper noteval = if noteval>upper then octceil by upper (noteval - by) else noteval
+  octfloor by lower noteval = if noteval<lower then octfloor by lower (noteval + by) else noteval
+  invert low high p = fmap ((octfloor 12 low).(octceil 12 high)) $ p
+  pmap param numf stringf p = (Map.mapWithKey (\k v -> if k == param then (applyFIS numf (round.numf.fromIntegral) stringf v) else v)) <$> p
+  ninvert l h p = pmap "note" ((octfloor 12 l).(octceil 12 h)) id p
 
 
+let getGlobalMode = cS "chromatic" "global_mode"
+    setGlobalMode = setS "global_mode"
+    getGlobalRoot = cN0 "global_root"
+    setGlobalRoot = setI "global_root"
+    tonal rr mm = note . (|+ rr) . scale mm
+    t = tonal getGlobalRoot getGlobalMode
+    rtonal rr mm = renoisenote . (|+ rr) . scale mm
+    rt = rtonal getGlobalRoot getGlobalMode
+    setkey root mode = do
+      setGlobalMode mode
+      setGlobalRoot root
+
+
+_vertsel :: Eq a => Double -> Pattern a -> Pattern a
+_vertsel d p = uncollect $ do
+                      xs <- collect p
+                      let n = length xs
+                          i = round $ (fromIntegral $ n - 1)*d
+                      case n < i || i < 0 of
+                                  True -> if i < 0 then (return $ [xs!!0]) else (return [xs!!(n-1)])
+                                  False -> return [xs!!i]                                            
+vertsel :: Eq a => Pattern Double -> Pattern a -> Pattern a
+vertsel = tParam _vertsel
