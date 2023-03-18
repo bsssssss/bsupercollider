@@ -2,12 +2,14 @@
 SynthDef.new(\bs_rongs, {
 
 	|out=0, freq=440, sustain=1, pan=0, begin=0, end=1, speed=1, accelerate=0, cps=0.5,
-	envMode = 0,
+	envMode = 0, trigMode=0,
 	structure=0.5, brightness=0.5, damping=0.75, accent=0.9, harmonicStretch=0.5, position=0.15, loss=0.15|
 
 	var sig;
 
-	var trig = Trig.kr(1, dur: sustain);
+	var trig = Select.kr(trigMode, [Trig.kr(1, dur: sustain), Trig.kr(1, dur: 0.01)]);
+
+
 	var modeNum=2,
 		cosFreq=0.025;
 

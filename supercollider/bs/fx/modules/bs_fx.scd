@@ -1,5 +1,49 @@
 
 (
+~dirt.addModule('lpg', { |dirtEvent|
+	dirtEvent.sendSynth('lpg' ++ ~dirt.numChannels,
+		[
+			out:    ~out,
+			lpg:    ~lpg,
+			lpgRes: ~lpgRes
+		]
+	)
+}, {~lpg.notNil});
+);
+
+(
+
+SynthDef("lpg" ++ ~dirt.numChannels, {
+
+	|out, sustain,
+	lpgRes=0.1, lpg=0|
+
+	var signalDry,
+		signal,
+		ci,
+		co
+	;
+
+	ci = Env.perc(releaseTime:sustain).ar;
+	co = 1-lpg;
+
+	signalDry = In.ar(out, ~dirt.numChannels);
+
+	signal = LPG.ar (
+		input: signalDry,
+		controlinput: ci,
+		controloffset: co,
+		resonance: lpgRes
+	);
+
+  ReplaceOut.ar(out, signal)
+}).add;
+
+
+
+);
+
+(
 ~dirt.addModule('lockhart', { |dirtEvent|
 	dirtEvent.sendSynth('lockhart' ++ ~dirt.numChannels,
 		[

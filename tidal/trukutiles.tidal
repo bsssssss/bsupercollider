@@ -5,7 +5,8 @@ d1
         fast 1 
         $ segment 8 
         $ idxRands 8 111 
-        <$> saw)) 
+        <$> saw
+        )) 
         (|* gain 1)
 
 -- granular
@@ -19,3 +20,31 @@ d1
   |- begin "0.002"
   |+ end "0.002"
   # tilt 0.5
+
+--siqwence 
+let drumpat i p = struct (select (i/24) pats) $ p
+
+
+--loop cycles
+import qualified Data.Map.Strict as Map
+
+import qualified Control.Concurrent.MVar as MV
+
+grab :: Show a => a -> IO ControlPattern
+grab ident = do now <- floor <$> getnow
+                putStrLn $ "Grabbing pattern " ++ show ident ++ " at cycle " ++ show now
+                pats <- MV.readMVar $ sPMapMV tidal
+                let pat = Map.lookup (show ident) pats
+                return $ maybe (error $ "No pattern with ident " ++ show ident) 
+                               (rotL (toRational now) . pattern)
+                               pat
+
+repeatCycles' pn pat = innerJoin $ (\n -> repeatCycles n pat) <$> pn
+
+rotL' pn pat = innerJoin $ (\n -> rotL n pat) <$> pn
+
+
+
+pat <- grab 1
+
+d1 $ timeLoop 4 $ pat

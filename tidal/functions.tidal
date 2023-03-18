@@ -2,7 +2,36 @@ let
     lock n offset = timeLoop n . ((offset |- (slow n $ run n)) <~)
     slide x = accelerate (2 **| (x |/ 12) - 1)
     midi x = s "midi" # midichan (x-1)
+    ccv = pF "ccv" . linlin 0 1 0 127
     sh x p = (<~) x $ p
+    vibratoDepth = pF "vibratoDepth"
+    vibratoRate = pF "vibratoRate"
+    shrand x = (sh x $ rand)
+    lpg = pF "lpg"
+    lpgRes = pF "lpgRes"
+    -- ccv = pF "ccv" . linlin 0 1 0 127
+    lpEnv = pF "lpEnv"
+    lpPlat = pF "lpPlat"
+    lpTilt = pF "lpTilt"
+    lpCurve = pF "lpCurve"
+    lpFollow = pF "lpFollow"
+    hpEnv = pF "hpEnv"
+    hpPlat = pF "hpPlat"
+    hpTilt = pF "hpTilt"
+    hpCurve = pF "hpCurve"
+    hpFollow = pF "hpFollow"
+    bpFollow = pF "bpFollow"
+    bpEnv = pF "bpEnv"
+    bpPlat = pF "bpPlat"
+    bpTilt = pF "bpTilt"
+    bpCurve = pF "bpCurve"
+--
+    scl = pS "scl"
+--
+    addr = pS "addr"
+--
+    grainz = pS "grainz"
+-- CV
 --    
     xenscale n = map (\x -> x / n * 12) [0..(n-1)]
     xen n p = toScale (xenscale n) p
@@ -39,6 +68,7 @@ let
     portamentoCurve = pF "portamentoCurve"
     portamento = pF "portamento"
     pitchEnv = pF "pitchEnv"
+    pitchEnvTime = pF "pitchEnvTime"
     pitchEnvSpeed = pF "pitchEnvSpeed"
     pitchLfoRate = pF "pitchLfoRate"
     pitchLfoPw = pF "pitchLfoPw"
@@ -56,6 +86,8 @@ let
     colorLfoShape = pF "colorLfoShape" 
     colorMod f t s c = colorFrom f # colorTo t # colorSpeed s # colorCurve c
     colorLfo r a s = colorLfoRate r # colorLfoAmp a # colorLfoShape s
+    colorPlat = pF "colorPlat"
+    colorTilt = pF "colorTilt"
 --
     timbreFrom = pF "timbreFrom"
     timbreTo = pF "timbreTo"
@@ -68,6 +100,9 @@ let
     timbreCurve = pF "timbreCurve"
     timbreLfo r a s = timbreLfoRate r # timbreLfoAmp a # timbreLfoShape s
     timbreMod f t s c = timbreFrom f # timbreTo t # timbreSpeed s # timbreCurve c
+    timbrePlat = pF "timbrePlat"
+    timbreTilt = pF "timbreTilt"
+    -- timbreCurve = pF "timbreCurve"
 --
     harmFrom = pF "harmFrom"
     harmTo = pF "harmTo"
@@ -177,9 +212,9 @@ let
     harm = pF "harm"
     morph = pF "morph"
     level = pF "level"
-    lpgdecay = pF "lpgdecay"
-    lpgcolour = pF "lpgcolour"
-    lpg d c = lpgdecay d # lpgcolour c
+    mlpgdecay = pF "mlpgdecay"
+    mlpgcolour = pF "mlpgcolour"
+    mlpg d c = mlpgdecay d # mlpgcolour c
     -- mainMod = pF "mainMod"
     -- auxMod = pF "auxMod"
     -- harmMod = pF "harmMod"
@@ -234,6 +269,21 @@ let
     ringsinternal = pI "ringsinternal"
     ringseasteregg = pI "ringseasteregg"
     rings f s b d p = ringsfreq f # ringsstruct s # ringsbright b # ringsdamp d # ringspos p
+    --
+    fx_ringsPre = pF "fx_ringsPre"
+    fx_ringsMix = pF "fx_ringsMix"
+    fx_ringsfreq = pF "fx_ringsfreq"
+    fx_ringsstruct = pF "fx_ringsstruct"
+    fx_ringsbright = pF "fx_ringsbright"
+    fx_ringsdamp = pF "fx_ringsdamp"
+    fx_ringspos = pF "fx_ringspos"
+    fx_ringsmodel = pF "fx_ringsmodel"
+    fx_ringspoly = pI "fx_ringspoly"
+    fx_ringsinternal = pI "fx_ringsinternal"
+    fx_ringseasteregg = pI "fx_ringseasteregg"
+    fx_ringsnote = pF "fx_ringsnote"
+    fx_rings f s b d p = fx_ringsfreq f # fx_ringsstruct s # fx_ringsbright b # fx_ringsdamp d # fx_ringspos p
+--    
     ripplescf = pF "ripplescf"
     ripplesreson = pF "ripplesreson"
     ripplesdrive = pF "ripplesdrive"
@@ -247,7 +297,7 @@ let
     verbfreeze = pI "verbfreeze"
     verbdiff = pF "verbdiff"
     verbsend = pF "verbsend"
-    verb w t d h = verbgain 1 # verbwet w # verbtime t # verbdamp d # verbhp h
+    verb w t d h df = verbgain 1 # verbwet w # verbtime t # verbdamp d # verbhp h # verbdiff df
 --
     warpsalgo = pI "warpsalgo"
     warpstimb = pF "warpstimb"
@@ -255,6 +305,24 @@ let
     warpsfreq = pF "warpsfreq"
     warpsvgain = pF "warpsvgain"
     warpseasteregg = pI "warpseasteregg"
+    warpsmodorbit = pI "warpsmodorbit"
+    warpsmod = pF "warpsmod"
+    warpssum = pF "warpssum"
+    --
+    comp = pF "comp"
+    compUp = pF "compUp"
+    compOrbit = pF "compOrbit"
+    compSidechain = pF "compSidechain"
+    --
+    sidechain = pF "sidechain"
+    sidechainFrom = pF "sidechainFrom"
+    scThreshold = pF "scThreshold"
+    scRatio = pF "scRatio"
+    scAttack = pF "scAttack"
+    scRelease = pF "scRelease"
+    scMakeup =  pF "scMakeup"
+    scPre = pF "scPre"
+    scUp = pF "scUp"
 -- SUPERFM
 -- Parameters
     fmamp op = pF ("amp" ++ show op)
@@ -271,7 +339,7 @@ let
     lfmd = fmparam fmdetune
     lfmer op = fmparam (fmegrate op)
     lfmel op = fmparam (fmeglevel op)
---
+-- Rungler
     oscA = pF "oscA" 
     oscB = pF "oscB"  
     runA = pF "runA" 
@@ -281,3 +349,61 @@ let
     res = pF "res" 
     offset = pF "offset" 
     loop = pF "loop" 
+-- PD Modules
+    gainSlew = pF "gainSlew"
+    shapeSlew = pF "shapeSlew"
+    panSlew = pF "panSlew"
+    filter1_f = pF "filter1_f"
+    filter1_fSlew = pF "filter1_fSlew"
+    filter1_q = pF "filter1_q"
+    filter1_qSlew = pF "filter1_qSlew"
+    filter1_t = pS "filter1_t"
+    filter1_tilt = pF "filter1_tilt"
+    filter1_plat = pF "filter1_plat"
+    filter1_curve = pF "filter1_curve"
+    filter1_env = pF "filter1_env"
+    filter2_f = pF "filter2_f"
+    filter2_fSlew = pF "filter2_fSlew"
+    filter2_q = pF "filter2_q"
+    filter2_qSlew = pF "filter2_qSlew"
+    filter2_t = pS "filter2_t"
+    filter2_tilt = pF "filter2_tilt"
+    filter2_plat = pF "filter2_plat"
+    filter2_curve = pF "filter2_curve"
+    filter2_env = pF "filter2_env"
+    lfoTimescale = pS "lfoTimescale"
+    lfoWaveform = pS "lfoWaveform"
+    lfoSkew = pF "lfoSkew"
+    lfoSkewSlew = pF "lfoSkewSlew"
+    lfoRate = pF "lfoRate"
+    lfoRateSlew = pF "lfoRateSlew"
+    lfoPhase = pF "lfoPhase"
+    lfoReset = pF "lfoReset"
+    globalReset = pI "globalReset"
+    env = pF "env"
+    porta = pF "porta"
+    cv = pF "cv"
+    cvSlew = pF "cvSlew"
+    cvSkew = pF "cvSkew"
+    cvSkewSlew = pF "cvSkewSlew"
+    skew = pF "skew"
+    skewSlew = pF "skewSlew"
+    rate = pF "rate"
+    rateSlew = pF "rateSlew"
+    phaseOffset = pF "phaseOffset"
+    reset = pF "reset"
+    waveform = pS "waveform"
+    seqTilt = pF "seqTilt"
+    seqPlat = pF "seqPlat"
+    seqSkew = pF "seqSkew"
+    seqSkewSlew = pF "seqSkewSlew"
+    seqOffset = pF "seqOffset"
+    seqLength = pF "seqLength"
+    pw = pF "pw"
+    pwSlew = pF "pwSlew"
+    q = pF "q"
+-- pd surge
+    afilter1Cutoff = pF "afilter1Cutoff"
+    afilter1CutoffSlew = pF "afilter1CutoffSlew"
+--tuning
+    tuning = pS "tuning"

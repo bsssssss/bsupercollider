@@ -3,12 +3,14 @@
 	// see http://doc.sccode.org/Classes/ServerOptions.html
 	s.options.numBuffers = 1024 * 256; // increase this if you need to load more samples
 	s.options.memSize = 8192 * 32; // increase this if you get "alloc failed" messages
-	s.options.numWireBufs = 128; // increase this if you get "exceeded number of interconnect buffers" messages
+	s.options.numWireBufs = 64; // increase this if you get "exceeded number of interconnect buffers" messages
 	s.options.maxNodes = 1024*32; // increase this if you are getting drop outs and the message "too many nodes"
 	s.options.numOutputBusChannels = 16; // set this to your hardware output channel size, if necessary
 	s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
     s.options.maxLogins = 8; // optional, required to enable feedforward VU meter
-	"SC_JACK_DEFAULT_OUTPUTS".setenv("system:playback_1,system:playback_2");
+	"SC_JACK_DEFAULT_OUTPUTS".setenv(
+		"VCV Rack:inport 0,VCV Rack:inport 1,VCV Rack:inport 2,VCV Rack:inport 3,VCV Rack:inport 4,VCV Rack:inport 5,VCV Rack:inport 6,VCV Rack:inport 7,VCV Rack:inport 8,VCV Rack:inport 9,VCV Rack:inport 10,VCV Rack:inport 11,VCV Rack:inport 12,VCV Rack:inport 13,VCV Rack:inport 14,VCV Rack:inport 15,"
+		);
 
 	// boot the server and start SuperDirt
 	s.waitForBoot {
@@ -27,7 +29,6 @@
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/grains/bs_grns.scd");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/cv/config.scd");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/externals/mi-ugens.scd");
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/externals/warps.scd");
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/modules/tidalVerb.scd");
 		~dirt.doNotReadYet = false;
 		// ~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
@@ -51,11 +52,12 @@
 		// ~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
 		
 		// listen osc messages from all addr
-		~dirt.start(57120, 0 ! 12, NetAddr("0.0.0.0"));   // start listening on port 57120, create two busses each sending audio to channel 0
+		~dirt.start(57120, [0, 2, 4, 6, 8, 10, 12, 14], NetAddr("0.0.0.0"));   // start listening on port 57120, create two busses each sending audio to channel 0
 
         // optional, enable feedforward vu meter
         ~dirt.startSendRMS;
 
+		// ~tidalcv = TidalCV(~dirt, -1, 9, 0.05, 0.025);
 
 		// optional, needed for convenient access from sclang:
 		(
@@ -67,12 +69,20 @@
 
 		MIDIClient.init;
 		~midiOut = MIDIOut.newByName("Midi Through", "Midi Through Port-0"); // substitute your own device here
-		~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
 
-		
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "bs/fx/modules/bs_globaleffects.scd");
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/scala.scd");
-		
+		~dirt.soundLibrary.addMIDI(\midi, ~midiOut);
+		        // define global effects for mutable instruments effects
+        ~dirt.orbits.do { |x|
+            // var clouds = GlobalDirtEffect(\global_mi_clouds, [\cloudspitch, \cloudspos, \cloudssize, \cloudsdens, \cloudstex, \cloudswet, \cloudsgain, \cloudsspread, \cloudsrvb, \cloudsfb, \cloudsfreeze, \cloudsmode, \cloudslofi]);
+            var verb = GlobalDirtEffect(\global_mi_verb, [\verbwet, \verbtime, \verbdamp, \verbhp, \verbfreeze, \verbdiff, \verbgain]);
+			var jpverb = GlobalDirtEffect(\global_jpverb, [\jverbTime, \jverbDamp, \jverbSize, \jverbEarly, \jverbModDepth, \jverbModFreq, \jverbLow, \jverbMid, \jverbHigh, \jverbLo, \jverbHi, \jverbGain]);
+            x.globalEffects = x.globalEffects
+            //   .addFirst(clouds)
+              .addFirst(verb)
+			  .addFirst(jpverb); 
+            x.initNodeTree;    
+        };                     
+        // end define global effects for mutable instruments effects
 	};
 
 	s.latency = 0.2; // increase this if you get "late" messages

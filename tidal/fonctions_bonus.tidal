@@ -51,3 +51,44 @@ _vertsel d p = uncollect $ do
                                   False -> return [xs!!i]                                            
 vertsel :: Eq a => Pattern Double -> Pattern a -> Pattern a
 vertsel = tParam _vertsel
+
+
+
+
+--note on off
+import Data.Maybe (fromJust)
+
+eventHasOffset :: Event a -> Bool
+eventHasOffset e | isAnalog e = False
+                 | otherwise = stop (fromJust $ whole e) == stop (part e)
+
+offsets :: Pattern a -> Pattern a
+offsets pat = withEvent f $ filterEvents eventHasOffset pat
+  where f (e@(Event _ Nothing _ _)) = e -- ignore analog events
+        f (Event c (Just (Arc b e)) _ v) = Event c (Just a) a v
+           where a = Arc e (e + (e - b))
+
+cmd = pS "cmd"
+
+rn n = stack [rn n, offsets $ noteOff n]
+
+d1 $ noteonoff (note "a b")
+
+
+
+
+ncat :: [(Time, Pattern a)] -> Pattern a
+ncat = seqPLoop . go 0
+  where
+    go _     []          = []
+    go t_acc ((t, p):ps) = (t_acc, t', p) : go t' ps
+      where
+        t' = t_acc + t
+
+-- example
+d1 $ ncat [
+  (2, s "<techno:1 ~!2>*16"),
+  (1, s "<techno:1!5 ~>*16"),
+  (0.5, s "909:0*16"),
+  (0.5, s "<gabba:0!7 ~>*16" # gain 0.9)
+  ]

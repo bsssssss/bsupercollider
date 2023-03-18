@@ -3,3 +3,4 @@
 
 load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/modules/jpverb.scd");
 load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/modules/bs_fx.scd");
+load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/modules/global_comp.scd");

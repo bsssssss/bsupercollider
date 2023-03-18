@@ -1,43 +1,48 @@
 
+
+
 (
+(1..SuperDirt.maxSampleNumChannels).do { |sampleNumChannels|
 
-SynthDef("bs_grn3", {
+	var name = format("grainz_%_%", sampleNumChannels, ~dirt.numChannels);
 
-    | out, sustain=1, freq=264, speed=1, begin=0, end=1, pan, accelerate, offset, grainIndex=0,
-	grainFreq=33.33, grainPos=0, overlap=2, grainRate=1, grainPitch=0, grainPosRate=1, grainSizeRatio=1|
+	SynthDef(name, {
 
-	var line, b, dur, phasor, sig, trig, bufFrames, grainTrig, phasorTrig, index;
+		| out, bufnum, pan, accelerate, offset, sustain=1, freq=264, speed=1, begin=0, end=1,
+		grainIndex=0,
+		grainFreq=33.33, grainPos=0, overlap=2, grainRate=1, grainPitch=0, grainPosRate=1, grainSizeRatio=1|
 
-	b          = Buffer.readChannel (s, "/media/bss/mais?/sonsse/Gems/tremblez/trapz.wav", channels: [0]);
-	bufFrames  = BufFrames.ir(b.bufnum);
+		var line, b, dur, phasor, sig, trig, bufFrames, grainTrig, phasorTrig, index;
 
-	dur        = sustain * (end - begin);
-	line       = Line.ar (1, 0, dur * (1 / speed), doneAction: 2);
-	phasorTrig = Trig.ar (line);
+		bufFrames  = BufFrames.ir(bufnum);
 
-	grainTrig  = Impulse.ar(grainFreq);
-	grainRate  = 2.pow(((freq.cpsmidi - 60) + grainPitch/12)) * grainRate;
+		dur        = sustain * (end - begin);
+		line       = Line.ar (1, 0, dur * (1 / speed), doneAction: 2);
+		phasorTrig = Trig.ar (line);
+
+		grainTrig  = Impulse.ar(grainFreq);
+		grainRate  = 2.pow(((freq.cpsmidi - 60) + grainPitch/12)) * grainRate;
 
 
-	phasor = Phasor.ar (
-		phasorTrig,
-		rate: grainPosRate * BufRateScale.kr(b.bufnum),
-		start: 0.0,
-		end: bufFrames
-	);
+		phasor = Phasor.ar (
+			phasorTrig,
+			rate: grainPosRate * BufRateScale.kr(bufnum),
+			start: 0.0,
+			end: bufFrames
+		);
 
-	sig = GrainBuf.ar(
-		numChannels: 2,
-		trigger: grainTrig,
-		dur: grainFreq.reciprocal * grainSizeRatio,
-		sndbuf: b,
-		rate: grainRate,
-		pos: (phasor / bufFrames) + grainPos
-	);
+		sig = GrainBuf.ar(
+			numChannels: 2,
+			trigger: grainTrig,
+			dur: grainFreq.reciprocal * grainSizeRatio,
+			sndbuf: bufnum,
+			rate: grainRate,
+			pos: (phasor / bufFrames) + grainPos
+		);
 
-	ReplaceOut.ar(out, DirtPan.ar(sig, ~dirt.numChannels, pan));
-}).add;
-
+		Out.ar(out, DirtPan.ar(sig, ~dirt.numChannels, pan));
+	}).add;
+};
 );
 
 
