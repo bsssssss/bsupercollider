@@ -48,3 +48,18 @@ rotL' pn pat = innerJoin $ (\n -> rotL n pat) <$> pn
 pat <- grab 1
 
 d1 $ timeLoop 4 $ pat
+
+
+ncat :: [(Time, Pattern a)] -> Pattern a
+ncat = seqPLoop . go 0
+  where
+    go _     []          = []
+    go t_acc ((t, p):ps) = (t_acc, t', p) : go t' ps
+      where
+        t' = t_acc + t
+
+d1
+    $ ncat [
+        (4, pat1),
+        (2, pat2)
+    ]

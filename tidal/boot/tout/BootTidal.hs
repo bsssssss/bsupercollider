@@ -108,6 +108,8 @@ let renoise = Target {
     pdtrack = pI "pdtrack"
     pd = pS "pd"
 
+    
+    
     theoTarget = Target {
         oName = "theo", 
         oAddress = "192.168.1.165", 
@@ -121,10 +123,39 @@ let renoise = Target {
     
     touchParRoute = OSC "/td/audio/{addr}" $ Named {requiredArgs = ["s"]}
 
+
+    vcvTarget = Target {
+        oName = "vcv", 
+        oAddress = "127.0.0.1", 
+        oHandshake = False, 
+        oPort = 7001,
+        oBusPort = Nothing,  
+        oLatency = 0.02, 
+        oSchedule = Live, 
+        oWindow = Nothing
+        }
+   
+    
+    vcvFormat = OSC "/ch/{vcvchan}" $ ArgList [("vc", Nothing)]
+
+    vcvchan = pI "vcvchan"
+    vc = pF "vc"
+    vc1 x = vc x # vcvchan 1
+    vc2 x = vc x # vcvchan 2
+    vc3 x = vc x # vcvchan 3
+    vc4 x = vc x # vcvchan 4
+    vc5 x = vc x # vcvchan 5
+    vc6 x = vc x # vcvchan 6
+    vc7 x = vc x # vcvchan 7
+    vc8 x = vc x # vcvchan 8
+    
+
     -- oscmap = [(pdTarget, [pdFormat])]
-    -- oscmap = [(superdirtTarget, [superdirtShape])]
+    oscmap = [(superdirtTarget {oLatency = 0.2}, [superdirtShape])]
+    -- oscmap = [(vcvTarget, [vcvFormat])]
+    -- oscmap = [(superdirtTarget, [superdirtShape]), (vstTarget, [superdirtShape])]
     -- oscmap = [(pdTarget, [pdFormat]), (theoTarget, [touchParRoute])]
-    oscmap = [(superdirtTarget, [superdirtShape]),(pdTarget, [pdFormat])]
+    -- oscmap = [(superdirtTarget, [superdirtShape]),(pdTarget, [pdFormat])]
     -- oscmap = [(superdirtTarget, [superdirtShape]),(theoTarget, [touchParRoute])]
     -- oscmap = [(superdirtTarget, [superdirtShape]),(pdTarget, [pdFormat]), (theoTarget, [touchParRoute])]
 :}
@@ -201,6 +232,15 @@ let only = (hush >>)
     pd6 = p 22 . (|< pdtrack 6)
     pd7 = p 23 . (|< pdtrack 7)
     pd8 = p 24 . (|< pdtrack 8)
+    --
+    vcv1 = p 25 
+    vcv2 = p 26 
+    vcv3 = p 27 
+    vcv4 = p 28 
+    vcv5 = p 29 
+    vcv6 = p 30 
+    vcv7 = p 31 
+    vcv8 = p 32 
 :}
 
 :{

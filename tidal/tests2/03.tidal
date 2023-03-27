@@ -1,0 +1,89 @@
+setcps (150/60/4)
+
+
+hush
+
+d1
+    $ slow 48
+    $ juxBy 0.75 rev
+    $ superimpose (
+        (|+ up 1)
+    )
+    $ superimpose (
+        -- jux rev .
+        slow 1.25
+        . (# gain 1)
+        . (# bpf 1500)
+        . (# hpf 1000)
+    )
+    $ superimpose (
+        slow 0.75 .
+        sh 0.125
+        . (|- begin 0.1)
+    )
+    -- $ jux (|+ up 0.01)
+    $ struct "{1 <1@2 1 1@3> 1@2 1 1@2 1 1@2 <1@2 1@4> <1@2 1@3 1@5>}%16"
+    $ s "internat"
+    # n 4
+    # up "<[12,12.05]>"
+    |+ up "-90"
+    # legato 0.666
+    # begin "<0.29!2>"
+    |+ begin (segment 16 $ (slow 128 saw) * 0.01)
+    # tilt (segment 8 $ choose [0,1])
+    # gain 1.1
+    # verb 0.5 0.1 0.1 0.1 0.1
+    # verbgain 1
+    # comp 1
+    # compThreshold 0.1
+    # compUp 3
+    # compMakeup 2
+    # compRelease 0.7
+    # compAttack 0.002
+    # lpf (slow 1.666 "[8000 13000 <200 198>,<60 6000> 12000]")
+    # lpq 0.6
+    # hpf "30"
+    -- # bpf 1000
+    -- # bpf 5000
+
+
+
+hush 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

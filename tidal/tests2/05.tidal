@@ -1,0 +1,112 @@
+setcps (130/60/4)
+
+hush
+
+let chords1 = ("<<c d g c f e>'min9'<d2 d2 d3 d3 d3 d3 d1 d1>'<i i i2>>")
+
+d1
+    $ stack [
+        struct "{1(6,10) 1(7,10)}%1".
+        vertsel (slow 2 "0 0.25 0.5") $ note (slow 2 chords1)
+        # s "braids"
+        # octave 3
+        # lpf (segment 8 $ rangex 50 500 $ (fast 8 $ shperlin 80))
+        # lpEnv (segment 8 $ rangex 1 30 $ shrand 80)
+        # lpCurve (segment 8 $ range "-22" 2 $ (fast 8 $ shperlin 800))
+        # lpq 0.1
+        # model 38
+        # timbre "0.5 0.9"
+        # tilt 0.1
+        # plat 0.5
+        # legato "{1 0.5 1.5 0.75 0.75}%8"
+        -- # silence 
+        ,
+        struct "{[~ 1] [~ ~ 1 ~] 1}%1"
+        $ note (slow 2 chords1)
+        |+ note "-12"
+        # s "braids"
+        # model 11
+        # lpf 1000
+        # tilt 0.02
+        # legato 0.5
+        # gain 0.7
+        -- # silence
+        ,
+        struct "{1(4,10,2) 1(3,10,5)}%1"
+        $ vertsel (segment 8 $ (fast "1.5 2.5" tri)) (note (slow 2 chords1))
+        |+ note "-12"
+        # s "braids"
+        # tilt 0.05
+        # model 24
+        # legato 1
+        # timbre "{0.1}%4"
+        # color 0.1
+        # gain (segment 8 $ rangex 0.6 0.8 $ shrand 50)
+        |* gain 1.1
+        -- # cut 1
+        # vibratoDepth 2
+        ,
+        struct "{1(3,10,3) 1(4,10,4)}%1"
+        $ vertsel (segment 8 $ (fast "3 <5 2 1.5>" saw)) (note (slow 2 chords1))
+        |+ note "0"
+        # s "braids"
+        # tilt 0.05
+        # model 38
+        # legato 1
+        # timbre "{0.4}%4"
+        # color 0.6
+        # gain (segment 8 $ rangex 0.6 0.8 $ shrand 50)
+        |* gain 1.3
+        # cut 1
+    ]
+    -- # sdelay 0.2 (4/5) 0.0
+
+
+d2
+    $ stack [
+        superimpose (
+            sh 32 .
+            pressBy "<0.5 [0 0.5] <0 -0.25>>" 
+            .(# speed 4)
+            .(# tilt 0.0)
+            .(# vertsel "{0.25 0.0}%1" (up (slow 2 chords1)))
+        ).
+        degradeBy 0.6 .
+        struct "{1(6,10,<0 5>) 1(7,10,<0 2 4>)}%1"
+        $ s "808bd"
+        # up "17 15 12"
+        # shape 0.8
+        # lpf 500
+        ,
+        someCyclesBy 0.5 (someCyclesBy (sh 8 0.3) rev . echoWith 6 (1/10) (|* gain 0.8)).
+        struct (inv "{1(6,10) 1(7,10)}%[1 1 1]")
+        $ s "808hh"
+        # legato 0.75
+        # up "6"
+        # gain 1.2
+        # tilt "{0.1 0.1 0.8}%4"
+        ,
+        struct "{~ 1 ~ ~ ~ 1 ~ ~ ~ [~ 1]}%5"
+        $ s "808cp"
+        # speed 1.4
+        # legato 0.5
+        # shape 0.4
+        ,
+        superimpose (
+            sh ("<2 -3 4>"/5)
+            .(# speed 1.33)
+            .(# legato 0.5)
+            .(# tilt 0.1)
+            .(|* gain 0.7)
+        ).
+        struct "{~@4 1@2 ~ [~ ~ ~ 1] <1 [~ 1 ~ ~]> ~@2}%5"
+        $ s "legsd"
+        # legato 1
+        # n 9
+        # speed 3
+        # tilt 0
+        # gain "{1 0.5}%10"
+    ]
+
+
+hush

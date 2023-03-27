@@ -1,4 +1,7 @@
 let
+    psrate = pF "psrate"
+    psdisp = pF "psdisp"
+    mn = pF "mn"
     lock n offset = timeLoop n . ((offset |- (slow n $ run n)) <~)
     slide x = accelerate (2 **| (x |/ 12) - 1)
     midi x = s "midi" # midichan (x-1)
@@ -7,9 +10,9 @@ let
     vibratoDepth = pF "vibratoDepth"
     vibratoRate = pF "vibratoRate"
     shrand x = (sh x $ rand)
+    shperlin x = (sh x $ perlin)
     lpg = pF "lpg"
     lpgRes = pF "lpgRes"
-    -- ccv = pF "ccv" . linlin 0 1 0 127
     lpEnv = pF "lpEnv"
     lpPlat = pF "lpPlat"
     lpTilt = pF "lpTilt"
@@ -61,6 +64,7 @@ let
     tilt = pF "tilt"
     plat = pF "plat"
     curve = pF "curve"
+    mirror = pF "mirror"
 --
     mod s t r1 r2 w = (sh s $ segment t $ range r1 r2 $ w)
     modex s t r1 r2 w = (sh s $ segment t $ rangex r1 r2 $ w)
@@ -70,6 +74,7 @@ let
     pitchEnv = pF "pitchEnv"
     pitchEnvTime = pF "pitchEnvTime"
     pitchEnvSpeed = pF "pitchEnvSpeed"
+    pitchEnvCurve = pF "pitchEnvCurve"
     pitchLfoRate = pF "pitchLfoRate"
     pitchLfoPw = pF "pitchLfoPw"
     pitchLfoWs = pF "pitchLfoWs"
@@ -88,6 +93,7 @@ let
     colorLfo r a s = colorLfoRate r # colorLfoAmp a # colorLfoShape s
     colorPlat = pF "colorPlat"
     colorTilt = pF "colorTilt"
+    colorMirror = pF "colorMirror"
 --
     timbreFrom = pF "timbreFrom"
     timbreTo = pF "timbreTo"
@@ -102,6 +108,7 @@ let
     timbreMod f t s c = timbreFrom f # timbreTo t # timbreSpeed s # timbreCurve c
     timbrePlat = pF "timbrePlat"
     timbreTilt = pF "timbreTilt"
+    timbreMirror = pF "timbreMirror"
     -- timbreCurve = pF "timbreCurve"
 --
     harmFrom = pF "harmFrom"
@@ -113,6 +120,9 @@ let
     harmLfoAmp = pF "harmLfoAmp"
     harmCurve = pF "harmCurve"
     harmLfoShape = pF "harmLfoShape"
+    harmPlat = pF "harmPlat"
+    harmTilt = pF "harmTilt"
+    harmMirror = pF "harmMirror"
     harmLfo r a s = harmLfoRate r # harmLfoAmp a # harmLfoShape s
     harmMod f t s c = harmFrom f # harmTo t # harmSpeed s # harmCurve c
 --
@@ -125,6 +135,9 @@ let
     morphLfoAmp = pF "morphLfoAmp"
     morphCurve = pF "morphCurve"
     morphLfoShape = pF "morphLfoShape" 
+    morphPlat = pF "morphPlat"
+    morphTilt = pF "morphTilt"
+    morphMirror = pF "morphMirror"
     morphLfo r a s = morphLfoRate r # morphLfoAmp a # morphLfoShape s
     morphMod f t s c = morphFrom f # morphTo t # morphSpeed s # morphCurve c
 --
@@ -313,6 +326,7 @@ let
     compUp = pF "compUp"
     compOrbit = pF "compOrbit"
     compSidechain = pF "compSidechain"
+    -- compress c t r u a rl m = comp c # compPre 1 # compThreshold t # compAttack 0.002 # compRelease 0.5 # compRatio 4 # compUp 1 # compMakeup 1 
     --
     sidechain = pF "sidechain"
     sidechainFrom = pF "sidechainFrom"

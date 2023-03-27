@@ -13,13 +13,13 @@ d1
         # timbreEnv "1"
         # timbreSpeed (segment 8 $choose [0.5,1,0.125])
         # speed (segment 16 $ choose [1,1/2,1/3])
-        # n "<a f e a c e>"
-        |+ n "[-24, -9]"
+        # note "<a f e a c e>"
+        |+ note "[-24, -9]"
         # legato 0.5
     ]
     # sdelay 0.3 (1/(segment 8 $ rangex 12 1280 rand)) (sh 2 $ segment 8 $ rangex 0.1 0.99 rand)
     # gain 0.99
-    # silence
+    -- # silence
 
 d2
     $ mask "{1 1 1 1 1 0 1 1 0 1 1 1 0}%4"
@@ -30,7 +30,7 @@ d2
     # speed 0.8
     # coarse 12
     # krush 10
-    # silence
+    -- # silence
 
 d3
     $ mask (inv "{1 1 1 1 1 <0 1> 1 1 <0 0 1> 1 1 1 0}%4")
@@ -44,7 +44,7 @@ d3
     # cut 3
     # legato 0.5
     # up (slow 1 $ segment 16 $ range 2 "-12" saw)
-    # silence
+    -- # silence
 
 d4
     $ struct "1*<8!8 16!8>"
@@ -55,7 +55,7 @@ d4
     |* amp "{1 0.5}%16"
     # coarse 4
     # gain 1.8
-    # silence
+    -- # silence
 
 d5
     $ struct "1*8"
@@ -68,7 +68,7 @@ d5
     # release 1
     # coarse 3
     # krush 2
-    # silence
+    -- # silence
 
 hush
 
