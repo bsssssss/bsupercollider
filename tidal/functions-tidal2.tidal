@@ -1,0 +1,191 @@
+:{
+linlin slo shi dlo dhi v =
+    let norm = (v - slo) / shi
+    in dlo + norm * (dhi - dlo)
+:}
+
+:{
+_vertsel :: Eq a => Double -> Pattern a -> Pattern a
+_vertsel d p = uncollect $ do
+                      xs <- collect p
+                      let n = length xs
+                          i = round $ (fromIntegral $ n - 1)*d
+                      case n < i || i < 0 of
+                                  True -> if i < 0 then (return $ [xs!!0]) else (return [xs!!(n-1)])
+                                  False -> return [xs!!i]                                            
+vertsel :: Eq a => Pattern Double -> Pattern a -> Pattern a
+vertsel = patternify _vertsel
+:}
+
+-- Arranger :
+:{
+ncat :: [(Time, Pattern a)] -> Pattern a
+ncat = seqPLoop . go 0
+  where
+    go _     []          = []
+    go t_acc ((t, p):ps) = (t_acc, t', p) : go t' ps
+      where
+        t' = t_acc + t
+:}    
+
+:{
+-- Hex to Bool represented as a table.
+mAlphabet :: [ (Char, String ) ]
+mAlphabet =  [ ('0' , "0000" )
+             , ('1' , "0001" )
+             , ('2' , "0010" )
+             , ('3' , "0011" )
+             , ('4' , "0100" )
+             , ('5' , "0101" )
+             , ('6' , "0110" )
+             , ('7' , "0111" )
+             , ('8' , "1000" )
+             , ('9' , "1001" )            
+             , ('a' , "1010" )
+             , ('b' , "1011" )
+             , ('c' , "1100" )
+             , ('d' , "1101" )
+             , ('e' , "1110" )
+             , ('f' , "1111" )
+             ]
+
+-- `n` is the number of subdivisions per-cycle in the resulting pattern
+-- `s` is the string to be hex-encoded
+hexAt :: Int -> [Char] -> Pattern Bool
+hexAt n s = parseBP_E $ "{" ++ (mconcat $ map mLookup s') ++ "}%" ++ show n
+            where mLookup l = maybe "" id (lookup l mAlphabet)
+                  s'        = (map Char.toLower s)
+
+-- A default function with 16 subdivisions per-cycle.
+hex :: [Char] -> Pattern Bool
+hex s = hexAt 16 s
+
+--  Two convenience functions
+structH s = struct (hexAt 16 s)
+maskH s = mask (hexAt 16 s)
+:}
+
+-- | Chooses from a list of patterns, using a pattern of integers (fold around ;0 ).
+:{
+pickP :: Pattern Int -> [Pattern a] -> Pattern a
+pickP = patternify _pickP
+
+_pickP :: Int -> [Pattern a] -> Pattern a
+_pickP i ps = ps !! index
+            where len   = length ps
+                  index = if i <  0 then len + i 
+                     else if i >= len then i - len 
+                        else i 
+:}
+
+-- SUPERFM
+:{
+let
+-- Parameters
+    fmamp op          = pF ("amp"     ++ show op)
+    fmratio op        = pF ("ratio"   ++ show op)
+    fmdetune op       = pF ("detune"  ++ show op)
+    fmmod opa opb     = pF ("mod"     ++ show opa ++ show opb )
+    fmegrate op step  = pF ("egrate"  ++ show op  ++ show step)
+    fmeglevel op step = pF ("eglevel" ++ show op  ++ show step)
+    fmfeedback        = pF "feedback"
+-- Array functions
+    fmparam function init xs = let xs' = [if i < length xs 
+                                          then xs !! i 
+                                          else init | i <- [0..5]]
+                               in foldr (#) (function 1 (head xs')) (zipWith function [2..] (tail xs'))
+    lfma     = fmparam fmamp 0
+    lfmr     = fmparam fmratio 1
+    lfmd     = fmparam fmdetune 0
+    lfmer op = fmparam (fmegrate op) 0
+    lfmel op = fmparam (fmeglevel op) 0
+:}
+
+:{
+withS :: String -> (String -> String) -> ControlPattern -> ControlPattern 
+withS name f pat = withValue (\cm -> Map.adjust (applyFIS id id f) name cm) pat
+
+_bank name = withS "s" (name ++)
+
+bank namepat pat = innerJoin $ (\name -> _bank name pat) <$> namepat
+
+bnk = bank
+:}
+
+:{
+plyexpWith :: (RealFrac a, Floating a) 
+            => Pattern Int ->  Pattern a -> (Pattern b -> Pattern b) ->  Pattern b ->  Pattern b
+plyexpWith np bp f p = 
+  innerJoin $ ((\n b -> _plyShapeWith n ((`approxRational` 1e-5) . (b**) . fromRational) f p) <$> np <*> bp)  
+                              
+plyexpOutWith :: (RealFrac a, Floating a) 
+            => Pattern Int ->  Pattern a -> (Pattern b -> Pattern b) ->  Pattern b ->  Pattern b
+plyexpOutWith np bp f p = 
+  innerJoin $ ((\n b -> _plyShapeOutWith n ((`approxRational` 1e-5) . (b**) . fromRational) f p) <$> np <*> bp) 
+
+_plyShapeOutWith :: Int -> (Time -> Time) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+_plyShapeOutWith n s f p = innerJoin $ (\v -> timeCat $ zip times (iterate f $ pure v)) <$> p
+  where
+    starts = map (s . fromIntegral) [0..n]
+    times = map (max 0.08) $ zipWith subtract starts (tail starts) 
+  
+_plyShapeWith :: Int -> (Time -> Time) -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+_plyShapeWith n s f p = squeezeJoin $ (\v -> timeCat $ zip times (iterate f $ pure v)) <$> p
+  where
+    starts = map (s . fromIntegral) [0..n]
+    times = map (max 0.08) $ zipWith subtract starts (tail starts)  
+:}
+
+
+
+:{
+-- typeclass to go back from Value to the wrapped type
+class Unvaluable a where
+  fromValue :: Value -> Maybe a
+
+instance Unvaluable String where
+  fromValue = getS
+instance Unvaluable Double where
+  fromValue = getF
+instance Unvaluable Rational where
+  fromValue = getR
+instance Unvaluable Int where
+  fromValue = getI
+instance Unvaluable Bool where
+  fromValue = getB
+instance Unvaluable Note where
+  fromValue = getN
+instance Unvaluable [Data.Word.Word8] where
+  fromValue = getBlob
+instance Unvaluable [Value] where
+  fromValue = getList
+
+-- hack to get the string key for a function that creates a singular ControlPattern
+-- e.g.: pKey note == "note"
+pKey :: (Enumerable a, Parseable a) => (Pattern a -> ControlPattern) -> String
+pKey f = eventValue $ head $ queryArc ((head . Data.Map.Strict.keys) <$> f (parseBP_E "0")) 0
+
+-- modify an existing value in a ControlPattern with an arbitrary function
+-- e.g.: modify gain (**2) (s "bd" # gain 0.5) == s "bd" # gain (0.5**2)
+-- TODO: is it possible to support a -> Pattern b?
+modify :: (Enumerable a, Parseable a, Unvaluable a, Valuable b) => (Pattern a -> ControlPattern) -> (a -> b) -> ControlPattern -> ControlPattern
+modify kf f p = (\m -> Data.Map.Strict.update (Just . fApply) (pKey kf) m) <$> p
+  where
+    fApply v = maybe v (toValue . f) $ fromValue v
+
+-- demo: iterative collatz note sequence (?????)
+collatz n | even n' = fromIntegral $ n' `div` 2
+          | otherwise = fromIntegral $ 3*n' + 1
+  where
+    n' = round n  
+-- d1
+--   $ plyWith 16 (modify note collatz)
+--   $ note "<18 25 28>" # s "bass3" # release 0.1    
+
+
+-- remod should map the note pattern to a control pattern for lpf, 
+-- where the frequency is the result of scaling 0 -> 12 to 100 -> 1000
+--
+-- p 1 $ remod (note 0 12) (lpf 100 1000)
+--     $ note "0 5 7 12"
+:}

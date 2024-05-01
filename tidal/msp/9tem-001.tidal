@@ -1,0 +1,8 @@
+setbpm 160
+
+
+p 1
+    $ stack [
+        struct "1*8"
+        $ msp "t1"
+    ]

@@ -1,0 +1,27 @@
+
+
+
+do
+let plyPat = (slow 1.25 "3 [2 9] 2")
+p 1
+  $ stack [
+    -- mask (necklace 16 [2,3]) $
+    n (
+      (|* 3) $
+      (|% 3) $
+      plyWith plyPat (|+ 1) $
+      "0"
+      )
+    # s "808kit1"
+    # mu 3
+    ,
+    -- fast 2 $
+    -- mask (necklace 16 [2,3]) $
+    n (
+      (|* 2) $
+      (|% 2) $
+      plyWith (plyPat |* (1/2)) (|+ 1) $
+      "0"
+      )
+    # s "505kit1"
+  ]

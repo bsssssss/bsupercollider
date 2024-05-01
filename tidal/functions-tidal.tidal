@@ -1,0 +1,18 @@
+let
+    setbpm x = setcps (x/60/4)
+    bpm x = cps (x/60/4)
+    --
+    lock n offset = timeLoop n . ((offset |- (slow n $ run n)) <~)
+    --
+    sh x p = (~>) x $ p
+    shrand x = (sh x $ rand)
+    shperlin x = (sh x $ perlin)
+    --
+    scala = pS "scala"
+    xenscale n = map (\x -> x / n * 12) [0..(n-1)]
+    xen n p = toScale (xenscale n) p
+    --
+    sqz effectcycle pat = squeezeJoin $ ((# effectcycle) . pure) <$> pat
+    --
+    -- bank name ps = stack (map (\ x -> (# s (name ++| (extractS "s" (x)))) $ x) ps)
+    -- fromBank name drum = s (name ++| drum)

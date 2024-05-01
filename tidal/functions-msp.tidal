@@ -1,0 +1,24 @@
+let
+    duration = pF "duration"
+    --
+    attack_ms     = pF "attack_ms"
+    decay_ms      = pF "decay_ms"
+    release_ms    = pF "release_ms"
+    attack_curve  = pF "attack_curve"
+    decay_curve   = pF "decay_curve" 
+    release_curve = pF "release_curve" 
+    --
+    pitch_ad_amp   = pF "pitch_ad_amp"
+    pitch_ad_dur   = pF "pitch_ad_dur"
+    pitch_ad_curve = pF "pitch_ad_curve"
+    --
+    pitch_lfo_reset     = pF "pitch_lfo_reset"
+    pitch_lfo_amp       = pF "pitch_lfo_amp"
+    pitch_lfo_freq      = pF "pitch_lfo_freq"
+    pitch_lfo_freqRatio = pF "pitch_lfo_freqRatio"
+    --
+    portamento       = pF "portamento"
+    portamento_ms    = pF "portamento_ms"
+    portamento_curve = pF "portamento_curve"   
+--
+    fluidSlice = pF "fluidSlice" 

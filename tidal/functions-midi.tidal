@@ -1,0 +1,19 @@
+let
+-- UTILS
+    chan x = midichan (x-1)
+    ccv = pF "ccv" . linlin 0 1 0 127
+-- VOLCA FM
+    volca_vel x = ccn 41 # ccv x
+    --
+    volca_mod_attack x = ccn 42 # ccv x
+    volca_mod_decay x  = ccn 43 # ccv x
+    volca_car_attack x = ccn 44 # ccv x
+    volca_car_decay x  = ccn 45 # ccv x
+    --
+    volca_lfo_rate x  = ccn 46 # ccv x
+    volca_lfo_depth x = ccn 47 # ccv x
+    --
+    volca_alg x = ccn 48 # ccv x
+    --
+    volca_arp_type x = ccn 49 # ccv x
+    volca_arp_div x  = ccn 50 # ccv x

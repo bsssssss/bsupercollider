@@ -1,0 +1,112 @@
+-- the same as "bd sd mt ht lt" (not "[bd sd mt] [ht lt]")
+d1 $ sound $ s_cat ["bd sd", "mt ht lt"]
+
+-- repeat sequence, removing a step each time
+d1 $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- play 8 steps per cycle
+d1 $ steps 8 $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- taper the taper
+d1 $ steps 8 $ s_taper $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- starts with tactus of 6 steps
+tactus $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- tactus of 21 steps (triangular number of 6)
+tactus $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- tactus of 231 steps (triangular number of 21)
+tactus $ s_taper $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- Do something every n steps
+d1 $ steps 8 $ s_nth 4 (# speed (-2)) $ n "0 1 2 3 4" # sound "arpy"
+
+-- Jump forward two steps every 4th beat
+d1 $ steps 8 $ s_nth 4 (2 <~) $ n "0 1 2 3 4" # sound "arpy"
+
+-- The steps can expand!
+d1 $ steps 8 $ s_nth 4 ((# (room 1 # sz 0.9)) . s_expand 6) $ n "0 1 2 3 4" # sound "arpy"
+
+-- Alternate between elements in groups
+
+d1 $ steps 8 $ sound $ s_alt [
+    ["bd", "sd:6"],
+    ["mt", "lt", "ht"],
+    ["gretsch:3 gretsch:4", "gretsch:2", s_expand 3 "gretsch:1", "cp"]
+  ]
+
+-- Use s_taperlist to generate one of the groups
+d1 $ steps 8 $ sound $ s_alt [
+    s_taperlist "arpy:0 arpy:3 arpy:4 arpy:6",
+    ["mt", "lt", "ht"],
+    ["gretsch:3 gretsch:4", "gretsch:2", s_expand 3 "gretsch:1", "cp"]
+  ]
+
+
+-- You can pattern everything! But note the tactus of the resulting
+-- pattern will be calculated from the first cycle. 
+
+d1 $ steps 8 $ s_expand "4!2 3!2 2!2 1!2" $
+  n (fast 1 "0 1 2 5 [3 4]") # sound "gretsch"
+    # speed 1.5
+
+d1 $ steps 8 $ s_sub "<[0 1 2 3 4] [4 3 2 1 0]>" $
+  n (fast 1 "0 1 2 5 [3 4]") # sound "gretsch"
+    # speed 1.5
+-- the same as "bd sd mt ht lt" (not "[bd sd mt] [ht lt]")
+d1 $ sound $ s_cat ["bd sd", "mt ht lt"]
+
+-- repeat sequence, removing a step each time
+d1 $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- play 8 steps per cycle
+d1 $ steps 8 $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- taper the taper
+d1 $ steps 8 $ s_taper $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- starts with tactus of 6 steps
+tactus $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- tactus of 21 steps (triangular number of 6)
+tactus $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- tactus of 231 steps (triangular number of 21)
+tactus $ s_taper $ s_taper $ n "0 1 2 3 4 5" # sound "arpy"
+
+-- Do something every n steps
+d1 $ steps 8 $ s_nth 4 (# speed (-2)) $ n "0 1 2 3 4" # sound "arpy"
+
+-- Jump forward two steps every 4th beat
+d1 $ steps 8 $ s_nth 4 (2 <~) $ n "0 1 2 3 4" # sound "arpy"
+
+-- The steps can expand!
+d1 $ steps 8 $ s_nth 4 ((# (room 1 # sz 0.9)) . s_expand 6) $ n "0 1 2 3 4" # sound "arpy"
+
+-- Alternate between elements in groups
+
+d1 $ steps 8 $ sound $ s_alt [
+    ["bd", "sd:6"],
+    ["mt", "lt", "ht"],
+    ["gretsch:3 gretsch:4", "gretsch:2", s_expand 3 "gretsch:1", "cp"]
+  ]
+
+-- Use s_taperlist to generate one of the groups
+d1 $ steps 8 $ sound $ s_alt [
+    s_taperlist "arpy:0 arpy:3 arpy:4 arpy:6",
+    ["mt", "lt", "ht"],
+    ["gretsch:3 gretsch:4", "gretsch:2", s_expand 3 "gretsch:1", "cp"]
+  ]
+
+
+-- You can pattern everything! But note the tactus of the resulting
+-- pattern will be calculated from the first cycle. 
+
+d1 $ steps 8 $ s_expand "4!2 3!2 2!2 1!2" $
+  n (fast 1 "0 1 2 5 [3 4]") # sound "gretsch"
+    # speed 1.5
+
+d1 $ steps 8 $ s_sub "<[0 1 2 3 4] [4 3 2 1 0]>" $
+  n (fast 1 "0 1 2 5 [3 4]") # sound "gretsch"
+    # speed 1.5

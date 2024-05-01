@@ -1,0 +1,195 @@
+let 
+-- TIDAL LOOPER
+    linput = pI "linput"
+    lname  = pS "lname"
+-- ADSR
+    attack  = pF "attack"
+    decay   = pF "decay"
+    hold    = pF "hold"
+    release = pF "release"
+    curve   = pF "curve"
+-- COMB FILTER
+    combf     = pF "combf"
+    combf_mix = pF "combf_mix"
+    combf_fb  = pF "combf_fb"
+-- DIRT FILTERS
+    lp_fEnv  = pF "lp_fEnv"
+    lp_tilt  = pF "lp_tilt"
+    lp_hold  = pF "lp_hold"
+    lp_curve = pF "lp_curve"
+-- BASIC FILTERS
+    lp2_f      = pF "lp2_f"
+    lp2_q      = pF "lp2_q"
+    lp2_fEnv   = pF "lp2_fEnv"
+    lp2_fhold  = pF "lp2_fhold"
+    lp2_fTilt  = pF "lp2_fTilt"
+    lp2_fCurve = pF "lp2_fCurve"
+    --
+    lp2_fbus busid pat = (pF "lp2_f" pat) # (pI "^lp2_f" busid)
+    lp2_qbus busid pat = (pF "lp2_q" pat) # (pI "^lp2_q" busid)
+    --
+    hp2_f      = pF "hp2_f"
+    hp2_q      = pF "hp2_q"
+    hp2_fEnv   = pF "hp2_fEnv"
+    hp2_fhold  = pF "hp2_fhold"
+    hp2_fTilt  = pF "hp2_fTilt"
+    hp2_fCurve = pF "hp2_fCurve"
+    --
+    hp2_fbus busid pat = (pF "hp2_f" pat) # (pI "^hp2_f" busid)
+    hp2_qbus busid pat = (pF "hp2_q" pat) # (pI "^hp2_q" busid)
+    --
+    br_f      = pF "br_f"
+    br_q      = pF "br_q"
+    br_fEnv   = pF "br_fEnv"
+    br_fhold  = pF "br_fhold"
+    br_fTilt  = pF "br_fTilt"
+    br_fCurve = pF "br_fCurve"
+    --
+    br_fbus busid pat = (pF "br_f" pat) # (pI "^br_f" busid)
+    br_qbus busid pat = (pF "br_q" pat) # (pI "^br_q" busid)
+    --
+    bp2_f      = pF "bp2_f"
+    bp2_q      = pF "bp2_q"
+    bp2_fEnv   = pF "bp2_fEnv"
+    bp2_fhold  = pF "bp2_fhold"
+    bp2_fTilt  = pF "bp2_fTilt"
+    bp2_fCurve = pF "bp2_fCurve"
+    --
+    bp2_fbus busid pat = (pF "bp2_f" pat) # (pI "^bp2_f" busid)
+    bp2_qbus busid pat = (pF "bp2_q" pat) # (pI "^bp2_q" busid)
+-- PITCH-SHIFT
+    psdisp = pF "psdisp"
+    psrate = pF "psrate"
+-- DELAY
+    delaySend = pF "delaySend"
+    delayamp = pF "delayamp"
+    sdelay = pF "sdelay"
+-- JPVERB
+    jverbWet      = pF "jverbWet"
+    jverbTime     = pF "jverbTime"
+    jverbDamp     = pF "jverbDamp"
+    jverbSize     = pF "jverbSize"
+    jverbEarly    = pF "jverbEarly"
+    jverbLow      = pF "jverbLow"
+    jverbMid      = pF "jverbMid"
+    jverbHigh     = pF "jverbHigh"
+    jverbLo       = pF "jverbLo"
+    jverbHi       = pF "jverbHi"
+    jverbGain     = pF "jverbGain"
+    jverbModDepth = pF "jverbModDepth"
+    jverbModFreq  = pF "jverbModFreq"
+-- GRAIN ENV
+    tilt  = pF "tilt"
+    -- hold  = pF "hold"
+    -- curve = pF "curve"
+-- SYNTHS PITCH MODS
+    pitch_env       = pF "pitch_env"
+    pitch_env_tilt  = pF "pitch_env_tilt"
+    pitch_env_hold  = pF "pitch_env_hold"
+    pitch_env_curve = pF "pitch_env_curve"
+    pitch_env_speed = pF "pitch_env_speed"
+    --
+    pitch_lfo_amp   = pF "pitch_lfo_amp"
+    pitch_lfo_rate  = pF "pitch_lfo_rate"
+    pitch_lfo_shape = pF "pitch_lfo_shape"
+    --
+    vibrato_depth = pF "vibrato_depth"
+    vibrato_rate  = pF "vibrato_rate"
+    --
+    slide2 x = accelerate (2**(x/12))
+    slide x  = accelerate (2 **| (x |/ 12) - 1)
+-- MUTABLE INSTRUMENTS
+-- BRAIDS / PLAITS
+    color              = pF "color"
+    color_env          = pF "color_env"
+    color_env_tilt     = pF "color_env_tilt"
+    color_env_hold     = pF "color_env_hold"
+    color_env_curve    = pF "color_env_curve"
+    color_env_speed    = pF "color_env_speed"
+    --
+    color_lfo_amp   = pF "color_lfo_amp"
+    color_lfo_rate  = pF "color_lfo_rate"
+    color_lfo_shape = pF "color_lfo_shape"
+    --
+    color_bus busid pat = (pF "color" pat) # (pI "^color" busid)
+    --
+    timbre              = pF "timbre"
+    timbre_env          = pF "timbre_env"
+    timbre_env_tilt     = pF "timbre_env_tilt"
+    timbre_env_hold     = pF "timbre_env_hold"
+    timbre_env_curve    = pF "timbre_env_curve"
+    timbre_env_speed    = pF "timbre_env_speed"
+    --
+    timbre_lfo_amp   = pF "timbre_lfo_amp"
+    timbre_lfo_rate  = pF "timbre_lfo_rate"
+    timbre_lfo_shape = pF "timbre_lfo_shape"
+    --
+    timbre_bus busid pat = (pF "timbre" pat) # (pI "^timbre" busid)
+    --
+    harm              = pF "harm"
+    harm_env          = pF "harm_env"
+    harm_env_tilt     = pF "harm_env_tilt"
+    harm_env_hold     = pF "harm_env_hold"
+    harm_env_curve    = pF "harm_env_curve"
+    harm_env_speed    = pF "harm_env_speed"
+    --
+    harm_lfo_amp   = pF "harm_lfo_amp"
+    harm_lfo_rate  = pF "harm_lfo_rate"
+    harm_lfo_shape = pF "harm_lfo_shape"
+    --
+    harm_bus busid pat = (pF "harm" pat) # (pI "^harm" busid)
+    --
+    morph              = pF "morph"
+    morph_env          = pF "morph_env"
+    morph_env_tilt     = pF "morph_env_tilt"
+    morph_env_hold     = pF "morph_env_hold"
+    morph_env_curve    = pF "morph_env_curve"
+    morph_env_speed    = pF "morph_env_speed"
+    --
+    morph_lfo_amp   = pF "morph_lfo_amp"
+    morph_lfo_rate  = pF "morph_lfo_rate"
+    morph_lfo_shape = pF "morph_lfo_shape"
+    --
+    morph_bus busid pat = (pF "morph" pat) # (pI "^harm" busid)
+    --
+    main = pF "main"
+    aux  = pF "aux"
+    --
+    model = pF "model"
+-- TIDES
+    tides_shape = pF "tides_shape"
+    tides_smooth = pF "tides_smooth"
+-- RINGS
+    -- structure, brightness, damping, position, model --
+    odd  = pF "odd"
+    even = pF "even"
+-- MU
+    mu = pF "mu"
+-- BS_RONGS
+    structure        = pF "structure"
+    brightness       = pF "brightness"
+    damping          = pF "damping"
+    accent           = pF "accent"
+    position         = pF "position"
+    loss             = pF "loss"
+    harmonic_stretch = pF "harmonic_stretch"
+-- BS_LAZ
+    laz_combf1       = pF "laz_combf1"
+    laz_combf1_mod1  = pF "laz_combf1_mod1"
+    laz_ftilt        = pF "laz_ftilt" -- in dbamp (tame high freqs)
+    inharmonics      = pF "inharmonics"
+    inharmonics_mod1 = pF "inharmonics_mod1"
+-- MODULATORS
+    mod1_amp   = pF "mod1_amp"
+    mod1_tilt  = pF "mod1_tilt"
+    mod1_hold  = pF "mod1_hold"
+    mod1_curve = pF "mod1_curve"
+
+
+
+
+
+
+
+
+

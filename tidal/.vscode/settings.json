@@ -1,0 +1,9 @@
+{
+  "tidalcycles.scripts": [
+    "functions-midi.tidal",
+    "functions-msp.tidal",
+    "functions-superdirt.tidal",
+    "functions-tidal.tidal",
+    "functions-tidal2.tidal"
+  ]
+}

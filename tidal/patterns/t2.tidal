@@ -1,0 +1,27 @@
+
+all $ id
+
+all $ (# (cps (slow 1 $ range 0.5 "<0.6 0.7>" $ saw)))
+
+all $ (# (cps (slow 1 $ range 0.5 "<0.6 0.4>" $ saw)))
+
+
+
+let 
+  brain1 = s "brain" # chan 1 # n 0
+  brain2 = s "brain" # chan 2 # n 0
+  brain3 = s "brain" # chan 3 # n (-36)
+  brain4 = s "brain" # chan 3 # n (-35)
+  brain5 = s "brain" # chan 3 # n (-34)
+  volca  = s "volca" # chan 1
+
+p 1 
+  -- $ steps 16
+  -- $ s_taper
+  -- $ s_taper
+  $ n (scale "minor" "[0 [<2 1>,4]]" 
+  -- |+ "<3 5 1 2>/4"
+  ) # volca
+
+
+
