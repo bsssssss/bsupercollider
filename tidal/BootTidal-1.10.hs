@@ -43,11 +43,11 @@ let
     forId i t                   = transition tidal False (Sound.Tidal.Transition.mortalOverlay t) i
 :}
 
-:script "/Users/bss/Documents/bsupercollider/tidal/functions-tidal.tidal"
-:script "/Users/bss/Documents/bsupercollider/tidal/functions-tidal2.tidal"
-:script "/Users/bss/Documents/bsupercollider/tidal/functions-superdirt.tidal"
-:script "/Users/bss/Documents/bsupercollider/tidal/functions-msp.tidal"
-:script "/Users/bss/Documents/bsupercollider/tidal/functions-midi.tidal"
+:script "/Users/bss/Dropbox/bsupercollider/tidal/functions-midi.tidal"
+:script "/Users/bss/Dropbox/bsupercollider/tidal/functions-tidal2.tidal"
+:script "/Users/bss/Dropbox/bsupercollider/tidal/functions-superdirt.tidal"
+:script "/Users/bss/Dropbox/bsupercollider/tidal/functions-msp.tidal"
+:script "/Users/bss/Dropbox/bsupercollider/tidal/functions-midi.tidal"
 
 :set -fwarn-orphans
 :set prompt "tidal> "

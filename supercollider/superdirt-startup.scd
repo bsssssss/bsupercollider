@@ -17,9 +17,10 @@ s.reboot { // server options are only updated on reboot
 	// configure the sound server: here you could add hardware specific options
 	// see http://doc.sccode.org/Classes/ServerOptions.html
 	//
-	s.options.device_("local-device"); s.options.numOutputBusChannels = 2;
+	// s.options.device_("local-device"); s.options.numOutputBusChannels = 2;
 	// s.options.inDevice_("AudioBox 1818 VSL"); s.options.numOutputBusChannels = 18;
-	// s.options.outDevice_("BlackHole 64ch"); s.options.numOutputBusChannels = 16;
+	s.options.outDevice_("BlackHole 64ch");
+	s.options.numOutputBusChannels = 16;
 
 	s.options.hardwareBufferSize   = 128;
 	s.options.numInputBusChannels  = 0;
@@ -61,7 +62,9 @@ s.reboot { // server options are only updated on reboot
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/scala.scd");
 
 		// ~dirt.start(57120, [0, 2, 4, 6, 8, 10, 12, 14]); // 8 stereos out
-		~dirt.start(57120, 0 ! 12); // start listening on port 57120, create two busses each sending audio to channel 0
+		// ~dirt.start(57120, 0 ! 12); // start listening on port 57120, create two busses each sending audio to channel 0
+		~dirt.start(57120, 4 ! 12); //
+
 		SuperDirt.default = ~dirt; // make this instance available in sclang (optional)
 
 		// optional, needed for convenient access from sclang:

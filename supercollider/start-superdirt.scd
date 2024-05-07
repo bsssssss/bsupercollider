@@ -1,5 +1,5 @@
 (
 s.reboot{
-	load("/Users/bss/Documents/bsupercollider/supercollider/superdirt-startup.scd")
+	load("/Users/bss/Dropbox/bsupercollider/supercollider/superdirt-startup.scd")
 };
 )
