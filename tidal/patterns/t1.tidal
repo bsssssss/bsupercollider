@@ -1,82 +1,63 @@
+setcps 0.8
 
-
-
-
-
-p 1
-  $ superimpose (
-    sh (-1/4) . (#(s "bshh" # speed 1 # freq 220 # n 2 # gain 0.6 # begin 0.01 # shape 0.4))
-  )
-  $ struct (restart "{1@3}%1" $ steps 8 $ s_taper $ "1 _ 1 _ _ 1 _ _")
-  $ s "bs_laz2"
-  # freq (2)
-  # laz_combf1 (slow 4 $ segment 1 $ choose [1..7])
-  # laz_combf1_mod1 (10)
-  # inharmonics ("[-2000]" * (4/3))
-  # inharmonics_mod1 (-1)
-  # mod1_curve (-1)
-  # mod1_tilt 0
-  -- # attack 3
-  # release 0.001
-  -- # tilt 0.0
-  # curve (-2)
-  -- # legato 1
-  -- # hold 0
-  # gain 0.5
-  # orbit 2 # room 0.3
+p 3
+  $ fast (1/2)
+  $ struct "1*10"
+  $ s "stereos4"
+  # n 2
+  # legato 4
+  # tilt 0.0
+  # begin (13/100)
+  # speed (1/3)
+  |+ begin (segment 16 $ (fast 1 sine) * 0.12)
+  # bpf (segment 16 $ rangex 4000 100 $ (fast 2.1 sine))
+  # combf 10000
+  -- # silence
 
 p 2
-  $ superimpose (
-    sh ("<1 3>"/4) . (#(n 3 # lpf 500))
-  )
-  $ n ("0(3,8)")
-  # s "909kit1"
-  # lpf 100
-  # mu 1.2
+  $ fast (2/3)
+  $ struct "1*4"
+  $ s "stereos4"
+  # n 8
+  # legato 1
+  # tilt 0.9
+  # begin (55/100)
+  |+ begin (segment 16 $ (fast 9 sine) * 0.01)
+  # bpf (segment 16 $ rangex 10000 100 $ (fast "[1.1, 0.4]" sine))
+  # combf 200
+  # mu 1
 
-_p 5
-  $ steps 8
-  $ slice 8 (s_cat ["0", "1 3 3 1 _"])
-  $ bank "breaks" "<eye!3 amen>"
-  # unit "c"
-  # gain "<[0.7 0.8!4]!3 0.9>"
+
+p 2
+  $ slow 8
+  $ note (
+    scale "minor" $ floor <$> (
+      (steps 4 $ s_cat ["[<<2 3 4> <0 0 0 -4>>(3,8) [5 <2 1 -1>]*2.1, [-2 _ 1 2]]"])
+    )
+  )
+  |* note (1.75)
+  |+ note "a3"
+  # s "plaits"
+  # model 1
+  # timbre (segment 4 $ range 0.3 0.5 $ (slow 99 tri))
+  # color 0.4
+  # morph (segment 16 $ (fast 9 saw))
+  # harm 0.25
+  # tilt "0 0.9!16"
+  # legato 5
+  # lp2_f 500
+  # lp2_q 0.8
+
+
+
 
 p 1
-  $ stack
+  $ struct (steps 4 $ s_cat ["1 1 1 <1 1 0> ", "<~ 1*[4|8]>" ])
+  $ bank "rolandtr808" "[bd bd:1]*3"
+  |+ n "<1>"
+  # sustain 4
+  # cut 1
+  # speed (2/3)
+  # mu 100
+  |* gain 0.6
 
-
-
-
-
-all $ (# cps (200/60/3))
-
-all $ (#(room 0.1 # size 0.01))
-
-let nsteps = (slow 2 "4 5 6")
-
-p 1 $ steps nsteps $ n "0 ~ ~ ~" # s "505kit1" # bpf 1000 # gain 0.9
-
-hush
-
-p 2 $ while "0 1" rev . (|* speed 2)  $ steps nsteps $ n ("0 _ 1 ~ 2 3") # s "505kit3" # bpf 300 # tilt 0 # curve (-8)
-
-p 3 $ slow 1
-  $ n (scale "minor" $
-    steps nsteps $ s_nth 7 (|+ "7 6 5") $ "~ 1 ~ 3"
-    )
-  # s "plaits"
-  # octave 2
-  # tilt 0
-  # timbre (range 0.3 0.7 $ shrand 89)
-  # curve 5
-  # legato (segment 8 $ rangex 0.8 1.4 $ shrand 59)
-  # bpf "[100]"
-  # gain 1
-
-
-
-
-
-
-
-p 1 $ stack

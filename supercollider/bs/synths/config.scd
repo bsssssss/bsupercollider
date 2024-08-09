@@ -8,7 +8,7 @@ var modules = [
 	"bs_saw",
 	"mi_braids",
 	"mi_plaits",
-	// "mi_rings",
+	 "mi_rings",
 	// "mi_omi",
 	// "mi_tides"
 ];

@@ -136,56 +136,20 @@ _plyShapeWith n s f p = squeezeJoin $ (\v -> timeCat $ zip times (iterate f $ pu
     times = map (max 0.08) $ zipWith subtract starts (tail starts)  
 :}
 
-
-
 :{
--- typeclass to go back from Value to the wrapped type
-class Unvaluable a where
-  fromValue :: Value -> Maybe a
-
-instance Unvaluable String where
-  fromValue = getS
-instance Unvaluable Double where
-  fromValue = getF
-instance Unvaluable Rational where
-  fromValue = getR
-instance Unvaluable Int where
-  fromValue = getI
-instance Unvaluable Bool where
-  fromValue = getB
-instance Unvaluable Note where
-  fromValue = getN
-instance Unvaluable [Data.Word.Word8] where
-  fromValue = getBlob
-instance Unvaluable [Value] where
-  fromValue = getList
-
--- hack to get the string key for a function that creates a singular ControlPattern
--- e.g.: pKey note == "note"
-pKey :: (Enumerable a, Parseable a) => (Pattern a -> ControlPattern) -> String
-pKey f = eventValue $ head $ queryArc ((head . Data.Map.Strict.keys) <$> f (parseBP_E "0")) 0
-
--- modify an existing value in a ControlPattern with an arbitrary function
--- e.g.: modify gain (**2) (s "bd" # gain 0.5) == s "bd" # gain (0.5**2)
--- TODO: is it possible to support a -> Pattern b?
-modify :: (Enumerable a, Parseable a, Unvaluable a, Valuable b) => (Pattern a -> ControlPattern) -> (a -> b) -> ControlPattern -> ControlPattern
-modify kf f p = (\m -> Data.Map.Strict.update (Just . fApply) (pKey kf) m) <$> p
-  where
-    fApply v = maybe v (toValue . f) $ fromValue v
-
--- demo: iterative collatz note sequence (?????)
-collatz n | even n' = fromIntegral $ n' `div` 2
-          | otherwise = fromIntegral $ 3*n' + 1
-  where
-    n' = round n  
--- d1
---   $ plyWith 16 (modify note collatz)
---   $ note "<18 25 28>" # s "bass3" # release 0.1    
-
-
--- remod should map the note pattern to a control pattern for lpf, 
--- where the frequency is the result of scaling 0 -> 12 to 100 -> 1000
---
--- p 1 $ remod (note 0 12) (lpf 100 1000)
---     $ note "0 5 7 12"
+let
+    setbpm x = setcps (x/60/4)
+    bpm x = cps (x/60/4)
+    --
+    lock n offset = timeLoop n . ((offset |- (slow n $ run n)) <~)
+    --
+    sh x p = (~>) x $ p
+    shrand x = (sh x $ rand)
+    shperlin x = (sh x $ perlin)
+    --
+    scala = pS "scala"
+    xenscale n = map (\x -> x / n * 12) [0..(n-1)]
+    xen n p = toScale (xenscale n) p
+    --
+    sqz effectcycle pat = squeezeJoin $ ((# effectcycle) . pure) <$> pat  
 :}

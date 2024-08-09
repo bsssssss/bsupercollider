@@ -1,29 +1,18 @@
-/*
-This is an example startup file.
-If you want to modify it, best copy it elsewhere to keep the git repository clean.
-
-You can then load it by calling
-"path/to/my/superdirt_startup.scd".load
-from the supercollider startup file
-
-The supercollider startup file is to be found in
-Platform.userAppSupportDir +/+ "startup.scd",
-or via the menu File > Open startup file
-*/
-
-
 (
 s.reboot { // server options are only updated on reboot
 	// configure the sound server: here you could add hardware specific options
 	// see http://doc.sccode.org/Classes/ServerOptions.html
 	//
-	// s.options.device_("local-device"); s.options.numOutputBusChannels = 2;
+	 //s.options.outDevice_("local-device"); s.options.numOutputBusChannels = 2;
+	 //s.options.outDevice_("External Headphones"); s.options.numOutputBusChannels = 2;
+	 s.options.device_("BH+MBP");
 	// s.options.inDevice_("AudioBox 1818 VSL"); s.options.numOutputBusChannels = 18;
-	s.options.outDevice_("BlackHole 64ch");
-	s.options.numOutputBusChannels = 16;
+	 //s.options.outDevice_("BlackHole 64ch"); s.options.numOutputBusChannels = 16;
+	//s.options.outDevice_("MacBook Pro Speakers"); s.options.numOutputBusChannels = 2;
+
 
 	s.options.hardwareBufferSize   = 128;
-	s.options.numInputBusChannels  = 0;
+	// s.options.numInputBusChannels  = 0;
 	s.options.numBuffers           = 1024 * 256; // increase this if you need to load more samples
 	s.options.memSize              = 8192 * 64; // increase this if you get "alloc failed" messages
 	s.options.numWireBufs          = 2048; // increase this if you get "exceeded number of interconnect buffers" messages
@@ -34,6 +23,8 @@ s.reboot { // server options are only updated on reboot
 		~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
 
 		~looper = TidalLooper(~dirt);
+
+		~dirt.doNotReadYet = true;
 		// ~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
 		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/autodafe/*");
@@ -42,14 +33,23 @@ s.reboot { // server options are only updated on reboot
 		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/rvbreaks/*");
 		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/legowelt/*");
 		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/ukg/*");
-		~dirt.loadSoundFiles("/Users/bss/Documents/samples/vcv/adek");
+		~dirt.loadSoundFiles("/Users/bss/Documents/samples/zooms/bino/to_amb");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos2");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos3");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos4");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos5");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/egms");
+		// ~dirt.loadSoundFiles("/Users/bss/Documents/samples/vcv/adek");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/tidal-banks.scd");
 		// s.sync; // optionally: wait for samples to be read
 
 		// MIDI SETUPS :
 
 		MIDIClient.init(verbose: false); /* <---- enable this !!! */
-		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/tidal-midi.scd");
+
+		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++
+			"/tidal-midi.scd");
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/tidal-midi-audiobox.scd");
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/tidal-midi-audiobox&m8u.scd");
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/tidal-midi-m8u.scd");
@@ -61,9 +61,8 @@ s.reboot { // server options are only updated on reboot
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/dirt-modules-order.scd");
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/scala.scd");
 
-		// ~dirt.start(57120, [0, 2, 4, 6, 8, 10, 12, 14]); // 8 stereos out
-		// ~dirt.start(57120, 0 ! 12); // start listening on port 57120, create two busses each sending audio to channel 0
-		~dirt.start(57120, 4 ! 12); //
+		~dirt.start(57120, [0, 2, 4, 6, 8, 10, 12, 14]); // 8 stereos out
+		 //~dirt.start(57120, 0 ! 12); // 12 stereos mixdown
 
 		SuperDirt.default = ~dirt; // make this instance available in sclang (optional)
 
@@ -75,6 +74,6 @@ s.reboot { // server options are only updated on reboot
 		);
 	};
 
-	s.latency = 0.2; // increase this if you get "late" messages
+	s.latency = 0.3; // increase this if you get "late" messages
 };
 );

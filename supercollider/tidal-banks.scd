@@ -18,6 +18,8 @@ var loadAndReplace = { |path, charToReplace, depth|
 loadAndReplace.("/Users/bss/Documents/git/samples/tidal-drum-machines/machines", "-", 2);
 
 // bs-banks :
-loadAndReplace.("/Users/bss/Documents/git/bsssssss/strudel-samples", "_", 2);
 loadAndReplace.("/Users/bss/Documents/samples/tidal-samples/undo", "_", 1);
+// loadAndReplace.("/Users/bss/Documents/samples/tidal-samples/bs/bs-drums", "_", 1);
+// loadAndReplace.("/Users/bss/Documents/samples/tidal-samples/bs/bs-breaks", "_", 1);
+loadAndReplace.("/Users/bss/Documents/samples/tidal-samples/bs", "_", 2);
 )

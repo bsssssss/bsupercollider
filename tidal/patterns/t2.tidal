@@ -1,27 +1,97 @@
-
-all $ id
-
-all $ (# (cps (slow 1 $ range 0.5 "<0.6 0.7>" $ saw)))
-
-all $ (# (cps (slow 1 $ range 0.5 "<0.6 0.4>" $ saw)))
+setbpm 188
 
 
 
-let 
-  brain1 = s "brain" # chan 1 # n 0
-  brain2 = s "brain" # chan 2 # n 0
-  brain3 = s "brain" # chan 3 # n (-36)
-  brain4 = s "brain" # chan 3 # n (-35)
-  brain5 = s "brain" # chan 3 # n (-34)
-  volca  = s "volca" # chan 1
-
-p 1 
-  -- $ steps 16
-  -- $ s_taper
-  -- $ s_taper
-  $ n (scale "minor" "[0 [<2 1>,4]]" 
-  -- |+ "<3 5 1 2>/4"
-  ) # volca
-
-
-
+do
+resetCycles
+p 1
+  $ slow 1
+  $ while "<0 0 0 <0 0 0 <0 1>>>" (# accelerate (-2))
+  $ while "<0 [0 1]>" (superimpose (mask "<0!8 1!8 0!2 1!8>" . fast 2 . (|* speed "<4 2>")))
+  $ stack [
+    mask "<0!1 1!9 0!2 1!7>/1.5" $
+    superimpose (mask "<0!8 1!12>/2" . slow "<2 1 2 1 [1 ~]>" . sh 3 . (# s "undosd") . (# sustain 0.5) . (|* gain 0.8) . (# cut 2)) $
+    sh ((steps 2 "0 0 1 0 1 1 -2") /8) $
+    struct "1(3,8)"
+    $ s "leg_bd"
+    # cut 1
+    |+ n 34
+    |+ note (0)
+    # accelerate ("0")
+    ,
+    slow "<1!5 2!2>" $
+    mask "<0 1 0 1 1> 1" $
+    mask "<0!4 1!4 [0 1]!2 1!4>" $
+    struct (cat ["1*2", "1(7,16,2)"])
+    $ s "leg_hh"
+    # n 8
+    |+ n "0 <0 <0 4> 1>"
+    # speed "<1 2>/4"
+    # combf (segment 16 $ rangex 10000 100 $ (fast 9 saw))
+    # cut 2
+    # lp2_f 9000
+  ]
+  # mu 4
+  |* gain 0.7
+p 2
+  $ stack [
+    mask "1" $
+    slow 1.25 $
+    note (scale "minor" "[0,1,2]")
+    # s "leg_dx"
+    # n 61
+    # legato 1.25
+    # begin "<0.23 <0.51 <<0.8 0.6> 0.25>>>"
+    # speed ("[2]"/3)
+    # gain 0.7
+    # legato 1
+    # coarse 5
+    # mu 1
+    ,
+    mask "<0!8 1!8>" $
+    slow 2 $
+    sh (2/3) $
+    struct "1"
+    $ s "leg_kawaik4"
+    # n 59
+    # legato 1
+    # tilt 0.9
+    # gain 0.8
+    ,
+    mask "<0!4 1!6>" $
+    slow 2.5 $
+    sh (1/3) $
+    struct "1"
+    $ s "leg_kawaik4"
+    # n 67
+    # legato 1
+    # tilt 0.9
+    # gain 0.87
+  ]
+p 3
+  $ stack [
+    mask "<0!16 1!8>" $
+    slow 1 $
+    begin ((steps 2 "<1 3> <~ ~ 2*2>") /8)
+    # bank "breaks" "amen:3"
+    # legato 1
+    # unit "c"
+    # mu 1
+    # combf "<200 2000>" 
+    # lp2_f 3000
+    # lp2_q 0.2
+    # gain 0.9
+    ,
+    mask "<1!8 0!6>" $
+    slow 1 $
+    begin ((steps 2 "1 1 0") /8)
+    # bank "breaks" "<joe:0 joe:1>/16"
+    # legato 1
+    # unit "c"
+    # mu 1
+    # combf "<10000 1234>/8" 
+    |* combf "<1 0.8 0.6>/32"
+    # lp2_f 9000
+    # lp2_q 0.9
+    # bpf 2000
+  ]

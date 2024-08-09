@@ -1,9 +1,40 @@
+setbpm 144
 
-
-
-
-
-p 1 $ remod (n 0 12) (lpf 1000 2000)
-    $ n "0 5 7 12"
-
-
+p 1
+  $ stack [
+    slow 2 $
+    fast "2 1 2 2 1" $
+    superimpose (sh 1 . (# s "leg_sd") . (|+ n "<2 3>")) $
+    struct (steps 1 $ 
+      s_alt [["1*8 ~", "1"], ["1 1*16"]])
+    $ s "leg_bd"
+    # n 104
+    # mu 10
+    # gain 0.7
+    # legato 1
+    |* n (slow 8 $ segment 1 $ shrand 12 * 100)
+    |+ n (segment 16 $ restart "1" $ (shrand 89) * 19)
+    ,
+    sh ("<[0|1|2|3]>"/4) $
+    slow 1 $
+    fast (slow 1.5 "1 2 3") $
+    struct "1 ~"
+    $ s "leg_bd"
+    # n 4
+    # legato 1
+    # mu 4
+    # accelerate (-0.1)
+    ,
+    struct "1*16"
+    $ s "leg_dx"
+    # n (slow 16 $ segment 1 $ shrand 98 * 199)
+    # note "[0,2,3]"
+    # legato (segment 16 $ range 0.9 1.2 $ (slow 1.89 tri))
+    # begin (segment 16 $ (fast 87 saw))
+    |* begin 0.2
+    |+ begin 0.1
+    # mu 1
+    |* gain 0.72
+  ]
+  # coarse 1
+  # combf (segment 16 $ rangex 10000 1000 $ shperlin 89)

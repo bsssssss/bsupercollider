@@ -1,7 +1,8 @@
 let
 -- UTILS
     chan x = midichan (x-1)
-    -- ccv = pF "ccv" . linlin 0 1 0 127
+    midi x = s "midi" # chan x
+    ccv = pF "ccv" . linlin 0 1 0 127
 -- VOLCA FM
     volca_vel x = ccn 41 # ccv x
     --

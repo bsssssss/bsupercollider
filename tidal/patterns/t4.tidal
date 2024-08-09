@@ -1,228 +1,35 @@
-
-all $ (# cps (170/60/4))
-
-
-
-do
-let pats = [struct "1*16" $ gain (saw * 0.8)
-           ,struct "1*8" $ gain (saw) 
-           ,struct "1*12" $ gain (saw * 0.9) 
-           ,struct "1*4" $ gain (saw) 
-           ,struct "1" $ gain (saw) 
-           ]
-p 3
-  $ stack [
-    slow 4 $
-    superimpose (
-      (# s "rolandtr909hh")
-      .(|* (gain (saw) |* speed (1 + (fast 4 sine))))
-      .(# n 2).(#hpf 9000)
-    ) $
-    iter "1 1 <1 2>" $
-    -- jux (rev.slow 1) $
-    s_cat pats
-    # s "rolandtr808bd"
-    |* speed (segment 32 $ rangex 1 0.9 $ saw)
-    -- # silence
-    ,
-    -- sh (1/8) $
-    s "bssd"
-    # n "[2,1]"
-    # speed (4/3)
-    # gain 0.8
-    # silence
-    ,
-    slow 4 $
-    superimpose (
-      rev . (# (s "superfm"
-                # note (scale "minor" "[0,1,2]")
-                # tilt 0.9
-                # lfma [1]
-                # fmmod 1 2 1
-                )
-             ) . (|* gain 0.6)
-    ) $
-    struct "1*16"
-    $ gain (rangex 0.2 1 $ fast 13 saw)
-    # s "bshh"
-  ]
+setbpm 180
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-p 2
-  $ slow 4
-  $ jux (|+ note (segment 16 $ range 0 1 $ slow 9 saw))
-  $ steps 16
-    $ n (s_alt [
-      ["0", "3"]
-     ,["<6 7>",slow 8 $ s_alt [["9*2"], ["8*5"]]]
-     ,["5", "3 1", "[5 4] 3"]
-    ]) 
-    # legato 1
-    # shape 0.3
-    # tilt 0
-    # hold 0.99
-    -- # curve (-1)
-    # s "808kit1"
-
-p 2
-  $ s "bshh*3" # speed (2) # gain 0.8
-
-p 3
-  $ fast (2/3)
-  $ s "bssd" # speed (2) # gain 0.8
-
-
-
-all $ (#cps (160/60/4))
-
-let
-  foots =
-    [
-      "1 ~ ~ 1 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 1"
-    , "1 ~ ~ 1 ~ ~ 1 ~ ~ 1 ~ ~ ~ ~ ~ ~"
-    , "1 ~ ~ 1 ~ ~ 1 ~ ~ 1 ~ ~ ~ 1 ~ 1"
-    , "1 ~ 1 ~ ~ ~ 1 ~ ~ ~ ~ ~ 1 ~ 1 ~"
-    -- , "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
-    -- , "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~"
-    ]
-
-
-
-do
-let 
-  plys = 
-    [
-     "8" 
-    ,"<9 [7 16 7]>" 
-    ]
-  plypat = 
-    cat (plys) |+ 2
--- resetCycles
 p 1
-  -- $ restart "{1@3 1@8 1@12 1@1.5 1@1.5 1@16}%2"
-  -- $ rev
-  -- $ spaceOut [1, 2, 1, 1, 1.25]
+  $ superimpose (sh 8 . (|+ n 2))
+  $ while "<0 1>/8" rev
+  $ while "<0 1>" (|* speed (1/"<2 3>"))
+  $ ply "<1!16 4!4 [4 2]!2>"
   $ stack [
-    superimpose (
-      (|+ note 12.01).(|* sustain 0.5).(# tilt 0.1).(|* gain (segment 32 $ range 0.1 0.9 $ slow 1 saw))
-    ) $
-    (|* gain (segment 64 $ range 0.1 1 $ fast ("3 2") saw)) $
-    ply (plypat) $
-    struct ("1*1")
-    $ note (scale "minor" "[0,4,5,6]" |+ "[3]")
-    # s "superfm"
-    # tilt 0
-    # sustain 0.1
-    # lfma [1]
-    # lfmr [1,3]
-    # fmmod 1 1 1
-    # fmmod 1 2 1
-    # lfmer 2 [100,30,0.4,1]
-    # lfmel 2 [0,1,0,0]
-    # fmfeedback 0.2
-    ,
-    -- every 3 (mask "0 1") $ mask "1" $
-    (|* gain (segment 32 $ range 0.2 1 $ fast ((rev) "3 2") tri)) $
-    ply plypat $
-    struct ("1*1")
-    $ s "ukgbd" # n 1
-    # speed 1
-    ,
-    mask "0 1" $
-    (|* gain (segment 32 $ range 0.2 1 $ fast ((rev) "3 2") tri)) $
-    ply plypat $
-    struct ("1*1")
-    $ s "superfm"
-    # note (scale "minor" "[0]" |- 9)
-    # octave 3
-    # tilt 0
-    # legato 1
-    # lfma [1]
-    # lfmr [1,1]
-    # fmmod 1 1 1
-    # fmmod 1 2 1
-    # lfmer 2 [10,10,0.1,1]
-    # lfmel 2 [0,2,0,0]
-    # fmfeedback 0.9
-    # mu 2
-    ,
-    ply plypat $
+    fast "1 2 1 2 1 1" $
+    off (1/4) (fast 2 . (|* speed 3 ) . (# cut 2) . (|+ n 10)) $
+    superimpose (slow 4 . (# s "undoperc") . (# speed (8)) . (# combf 1000)) $
+    swingBy (1/5) 1 $
     struct "1"
-    $ s "leg_kawaik4" # n 163
-    # sustain 0.02
-    # begin 0.1
-    # tilt 0
-    # bpf 12000
-    # bpq 12
+    $ s "leg_bd"
+    # n 35
+    # legato 0.5
+    # mu 100
+    |* gain 0.6
     ,
-    struct "~ 1"
-    $ s "rolandtr909cp"
-    # sustain 0.1
-  ]
-
-do
-let 
-  fm1 =
-    s "superfm"
-    # lfma [1]
-    # lfmr [3,(1.01), (3)]
-    # fmmod 1 2 1
-    # fmmod 2 3 0.6
-    # fmmod 3 1 0
-    # fmmod 1 3 0.3
-    # lfmel 2 [0,1,1,1]
-    # lfmer 2 [0.5,1,2,2]
-  k1 =
-    s "ukgbd:2"
-p 1
-  $ struct (steps 3 $ s_taper $ ply "<2 3 4 3>" $ s_taper 
-            $ s_cat ["1 _ _ _ 1 _ 1 _ _", "1 _ _ _ _", nothing]
-            )
-  $ stack [
-    fm1
-      # note (scale "dorian" "[0,1 -2,2 1]" |+ (-3))
-      # tilt 0.9
-      # curve "3 9"
-      # gain 0.8
-      # legato 1
+    juxBy 0.2 (slow 1.25) $
+    fast "1 2 2" $
+    struct "1*2"
+    $ s "606kit1:3"
+    # gain (segment 16 $ range 1 0.5 $ saw)
     ,
-    k1 # n 1 # up ("[12,23]" |* (segment 8 $ range 0.3 0.2 $ saw))
+    restart (steps 2 "1 _ _ 1 _ 1 _ _ 1 _ 1 1 _ _") $
+    struct "1"
+    $ s "breakssniper:1"
+    |+ begin ("<0 1 1>"/8)
+    # unit "c"
+    # legato 1
+    # mu 2
   ]
-p 2
-  $ struct "1"
-  $ s "rolandtr909cp"
-  # note "[0,1]"
-p 3
-  $ struct (mask "0 1" $ steps 3 $ s_taper $ ply "8" $ s_taper
-            $ s_cat ["1 _ _ _ 1 _ 1 _ _", "1 _ _ _ _", nothing]
-            )
-  $ s "bshh:2" # speed 1 # gain 0.9
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-

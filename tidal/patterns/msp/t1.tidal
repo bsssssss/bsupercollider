@@ -1,0 +1,12 @@
+setcps 1
+
+p 1
+  $ fast 2 
+  $ fast "<1 2 3 4>"
+  $ fast "[32|16|8|6]*4 [4|3|2|1]"
+  $ n (run 8)
+  # msp "s1" 
+
+p 1
+  $ n (run 32)
+  # msp "s1"
