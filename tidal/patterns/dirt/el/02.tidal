@@ -1,0 +1,55 @@
+setbpm 150
+
+p 1
+  $ stack [
+      note (
+        arp "down" 
+        $ slow "4"
+        $ (steps 2 "<f>'maj'16'iiiiiiiiiiiiiiiii'oo")
+      )
+      # s "leg_perc"
+      # legato 1
+      # n 54
+      |* speed (1/64)
+      # mu 4
+      # begin (segment 64 $ saw * 0.3 + 0.01)
+      -- # silence
+      ,
+      note (
+        arp "down" 
+        $ slow "2"
+        $ (steps 2 "[f a3]'maj'8'i'o")
+        |+ (-1)
+      )
+      # s "leg_perc"
+      # legato 1
+      # n 9
+      |* speed (1/2)
+      # mu 2
+      # sustain 0.5
+      # tilt 0
+      # begin (segment 64 $ saw * 0.3 + 0.01)
+      -- # silence
+      ,
+      mask "<1 1 1 <1 0>>" $
+      begin ((segment 8 $ quantise 8 $ fast 1.24 tri))
+      # s "rvbreaks5"
+      # unit "c"
+      # n 3
+      # mu 5
+      # legato 1
+      # gain "[0.8 1]*4"
+      # combf 1000
+      -- # silence
+      ,
+      sh (1/4) $
+      begin ((segment 4 $ quantise 8 $ fast (3/5) saw))
+      # s "rvbreaks4"
+      # unit "c"
+      # n 6
+      # mu 10
+      # legato "1 1 1 0.75"
+      # gain 0.7
+      -- # silence
+  ]
+  |+ n 22

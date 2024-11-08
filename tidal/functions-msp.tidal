@@ -22,3 +22,22 @@ let
     portamento_curve = pF "portamento_curve"   
 --
     fluidSlice = pF "fluidSlice" 
+--
+--  MODALYS 
+    strike1Pos_x = pF "strike1Pos_x"
+    strike1Pos_y = pF "strike1Pos_y"
+    strike1Pos x y = strike1Pos_x x # strike1Pos_y y
+    strike2Pos_x = pF "strike2Pos_x"
+    strike2Pos_y = pF "strike2Pos_y"
+    strike2Pos x y = strike2Pos_x x # strike2Pos_y y
+    suspPos_x = pF "suspPos_x"
+    suspPos_y = pF "suspPos_y"
+    susp x y = suspPos_x x # suspPos_y y
+    micLPos_x = pF "micLPos_x"
+    micLPos_y = pF "micLPos_y"
+    micL x y = micLPos_x x # micLPos_y y
+    micRPos_x = pF "micRPos_x"
+    micRPos_y = pF "micRPos_y"
+    micR x y = micRPos_x x # micRPos_y y
+    freq_loss = pF "freq_loss"
+    const_loss = pF "const_loss"

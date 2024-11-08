@@ -1,0 +1,29 @@
+setcps 1
+
+
+xfadeIn 1 32
+  $ slow 16
+  $ stack [
+      juxBy 0.2 (rev . (|+ begin 0.2) . slow 1.1) $
+      begin (segment 16 $ (slow 13 tri) * 0.09 + 0.3)
+      # s "egms"
+      # n 39
+      # legato 2
+      # tilt 0.5
+      # speed (0.8)
+      # br_f 1000
+      # br_q 4
+      # gain 1.2
+      # room 0.8 # size 0.9
+      ,
+      begin (segment 16 $ (slow 4 saw) * 0.03 + 0.7)
+      # s "stereos4"
+      # n 3
+      # legato 2
+      # tilt 0.5
+      # speed (0.4)
+      # br_f 5000
+      # br_q 6
+      # gain 1
+      # orbit 1
+  ]

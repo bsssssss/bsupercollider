@@ -1,15 +1,11 @@
-setcps 1
+setcps 0.6
+
 
 p 1
-  $ restart (slow 4 "{1 1@0.5}%1")
-  $ slow 2
   $ stack [
-    n (arp "up" "c'maj9")
-    # midi 1
-    ,
-    restart (steps 8 "1 0!9") $
-    slow (7/6) $
-    n (arp "updown" "c'maj11")
-    # midi 2
+      note (steps 8
+              $ "0 2 3 5 ~" 
+           )
+      # midi 1
+      # legato 1
   ]
-  # octave 4

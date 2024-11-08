@@ -1,0 +1,88 @@
+setbpm 180
+
+
+
+
+do
+let 
+  drms1 = 
+    inhabit [("k", s "leg_bd" # n 0 |* gain "1")
+            ,("s", s "leg_sd" # n 8 |* gain 0.9)
+            ]
+p 1
+  $ stack [
+      while "<0!24 1!8>" (
+        (|* speed (segment 16 $ range 1.74 0.5 $ saw))
+      ) $
+      while "<0!20 1!4>" (mask "1 0 0") $
+      superimpose (
+        sh (1/2) 
+        . (|+ n (9 |+ "<0!2 22!2>"))
+        . (|* gain 0.9)
+        . (# mu 100)
+        . (# legato "<1 0.5>")
+      ) $
+      drms1 (steps 8 $ "k s@2 k!2 ~ s k@1.5 k@1.5 k@3 ~")
+      |+ n 46
+      |+ n 0
+      # legato "<0.2!3 0.5>"
+      # mu 20
+      |* gain 0.6
+      -- # silence
+      ,
+      mask "<0!16 1!32 0!4 1!16>" $
+      (|+ begin ("<0!4 1!2 2>"/8)) $
+      while (slow 2 "0 <0 1>") (
+        (|* speed (1))
+        . (|* legato 0.1)
+        . ply 8
+        . slow 4
+        ) $
+      (# lp2_f 5000) $
+      stack [
+        mask "<1!32 0!24>" $
+        begin (steps 16 $ "0@16 1@12")
+        # s "rvbreaks4"
+        # unit "c"
+        # n 10
+        # legato 1
+        ,
+        mask "<1!48 0!24>" $
+        sh (1/2) $
+        begin (steps 16 $ "0@16 1@12")
+        # s "rvbreaks4"
+        # unit "c"
+        # n 12
+        # legato 1
+        ,
+        mask "<1!64 0!16>" $
+        sh (3/4) $
+        begin (steps 16 $ (fast 1 "0@16 [2*2]@12") / 8)
+        # s "rvbreaks4"
+        # unit "c"
+        # n 6
+        # legato 1
+        ]
+        |* gain 0.9
+      ]
+      -- # silence
+p 2 
+  $ stack [
+      note (scale "minor" $ floor <$> (
+        (steps 8 $ ("0@16 0@16" |+ "<[0,1,2] [-2,1,3]>" |+ "<<0 0 2> <0 2>>") )
+      ))
+      # s "plaits"
+      # model 4
+      # octave 1
+      # timbre_env 0.01
+      # timbre_env_curve (3)
+      # timbre 0.75
+      # morph 0.5
+      # harm 0.75
+      # tilt 0.1
+      # hold 0.97
+      # lpf 5000
+      # hpf 300
+      # gain 0.65
+  ]
+  -- # silence

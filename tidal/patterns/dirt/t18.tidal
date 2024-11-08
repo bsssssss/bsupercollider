@@ -1,0 +1,55 @@
+
+
+
+
+
+setbpm 175
+
+do
+let drms1 = inhabit [
+                      ("bd", s "leg_bd" |+ n 1) 
+                     ,("sd", s "leg_sd" |+ n 1) 
+                    ]
+p 1
+  $ stack [
+      begin (steps 8 $ 
+              (restart "<1@2 1 ~ 1@4 1@1.5>" $ ("0@6 1 ~ [1 2 3 0]@8") / 8)  
+            )
+      # s "rvbreaks4"
+      # legato 1
+      # n "13"
+      # unit "c"
+      # shape 0.4
+      # mu 2
+      # gain 1.4
+      # combf (segment 16 $ rangex 10000 100 $ saw)
+      # tilt "<0 0.9>"
+      # hold 0.25
+      -- # silence
+      ,
+      drms1 (restart "<1@4 1@4 1@1.5>" $ steps 8 $ ("[bd ~]!2 bd sd bd@2 [sd bd] sd bd ~!2") )
+      # legato 1
+      |+ n 89
+      |+ n "<0!16 12!16>"
+      |+ n 4
+      |+ n 14
+      # mu 3
+      # gain 1.2
+      # lp2_f (segment 16 $ rangex 8000 4000 $ saw)
+      # lp2_q 0.99
+      ,
+      stack [
+        struct "<1@2>"
+        $ s "egms"
+        # n 26
+        # begin 0.56
+        # legato 2
+        # hold 0.8
+        # tilt 0.1
+        # gain 1.3
+        # note 4
+        # mu 2
+        # shape 0.8
+        # hpf 200
+      ]
+  ]

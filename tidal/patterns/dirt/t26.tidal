@@ -1,0 +1,16 @@
+setbpm 100
+
+p 1
+  $ superimpose (restart "<1 _ _>" . slow (3/4) . (|+ note (-12)) . rev)
+  $ superimpose (restart "<1 _>" . slow (5/6) . (|+ note 0))
+  $ struct "1*[1 2]"
+  $ s "plaits"
+  # model 3
+  # note (scale "minor" "[0,1,2]")
+  # timbre (segment 16 $ saw)
+  # harm 0.5
+  # legato (segment 16 $ range 1 3 $ shperlin 89)
+  # tilt 0.0
+  # pF "plat" 0.1
+  # curve (-9)
+  # pan (segment 16 $ shrand 89)

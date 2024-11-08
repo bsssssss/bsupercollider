@@ -1,0 +1,94 @@
+setcps 0.8
+
+p 1
+  $ juxBy 0.4 (slow 1.1 . rev . (|+ n 1))
+  $ slow 1
+  $ bite 1 (slow 8 "0*12" )
+  $ ply 3
+  $ stack [
+      while "1" (echoWith 2 (1/8) (|* speed 2)) $
+      struct "{1 ~ 1@0.75 1@1.5 ~}%2"
+      $ s "jbk_bd"
+      # mu 400
+      # gain 0.9
+      -- # silence
+      ,
+      sh (3/4) $
+      while "1" (echoWith 2 (3/8) (|* speed 0.7)) $
+      struct "{1 [~ 1] ~@0.5}%1"
+      $ s "jbk_bd"
+      # n 10
+      # mu 100
+      # sustain 0.2
+      ,
+      echoWith 2 (2/16) (# n "1") $
+      struct "{~ ~ 1 ~ [~ 1] [~ 1 ~ ~]}%2"
+      $ s "jbk_sd"
+      # n 10
+      # sustain 0.3
+      # speed 1
+      # mu 4
+      ,
+      begin ( ("{0 _ ~ 0 _ _ _ ~!4}%8") /16)
+      # s "rvbreaks5"
+      # n 31
+      # unit "c"
+      # legato 1
+      # mu 7
+      -- # silence
+      ,
+      sh (2/8) $
+      begin ( ("{1 _ ~ 2 _ _ _ _ _}%8") /16)
+      # s "rvbreaks2"
+      # n 2
+      # mu 6
+      # speed (1/4)
+      # unit "c"
+      # legato 1
+      # silence
+      ,
+      sh (1/4) $
+      begin ( ("{0 _ _ 0 _ _ _}%8") /16)
+      # s "breaksaction"
+      # n "<0!8 1!8>"
+      # unit "c"
+      # legato 1
+      # shape 0.8
+      # mu 10
+      # combf "<1000!4 500!4>"
+  ]
+  |* speed "1!28 0.5!8"
+  |+ n "<0!32 3!32>"
+  # lp2_f 2000
+  # lp2_q 0.2
+  # coarse 2
+
+p 2
+  $ slow 1
+  $ stack [
+      superimpose (
+        sh (1/4) . (|* note (1.2))
+      ) $
+      note (scale "minor" ("0 1 [3 2]*2 4@5 3@3" |+ "<3 2 0>"))
+      # s "plaits"
+      # model 6
+      # octave 4
+      # legato 0.2
+      # mu 5
+      ,
+      struct "{1@4}%1"
+      $ s "stereos4"
+      # n 19
+      # begin 0.24
+      # legato 1
+      # mu 400
+      # gain 1.2
+      # lp2_f 1000
+      # speed (1/2)
+  ]
+  # orbit 2
+  |* gain 0.8
+  # room 0.4
+  # size 0.99
+  # silence
+

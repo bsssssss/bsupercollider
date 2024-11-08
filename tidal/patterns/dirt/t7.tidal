@@ -1,0 +1,60 @@
+setcps 0.8
+
+
+p 2
+  -- $ bite 4 "0*2"
+  $ slow "<2!8 1!2>"
+  $ while "<0 0 0 <0 1 0 1 1>>" (juxBy 0.3 press)
+  $ while "<0 0 <0 1>>" (rev)
+  $ stack [
+    begin ((steps 8 $ "0 _ _ 2 <2 0> <2*2 2*2 1> 7*2 7*8")/8)
+    # s "breakspride:1"
+    # legato 1
+    # unit "c"
+    # mu 2
+    # note (-1)
+    ,
+    sh (1/4) $
+    begin ((steps 4 $ "0 _ _ 2 1 2 2*2 7*2 7*8")/8)
+    # s "breaksthink"
+    # legato 1
+    # unit "c"
+    # mu 10
+    # note (12)
+    ,
+    slow "<1!4 2!3>" $
+    struct "1(3,8,<0 0 1>)"
+    $ s "leg_bd"
+    # n 54
+    # mu 50
+    # accelerate (-0.2)
+    # lpf 1000
+    # cut "-1"
+    # legato 1
+    ,
+    fast 2 $ 
+    bite 2 (steps 4 $ "0 _ _ 0 _ _ _") $
+    stack [
+      struct (fast 2 "1(3,8)") $
+      note ("<5 2 3@2>")
+      # s "braids"
+      # legato 1
+      ,
+      sh ((1/4)+ 8) $
+      struct (fast 2 "1(4,8)") $
+      note ("<7 -2 2@2>" |+ "0 3 5 7")
+      # s "braids"
+      # octave 6
+      # legato 1
+    ]
+  ]
+  |* gain 0.8
+  |* mu 3
+
+
+
+
+p 1
+  $ stack [
+    
+  ]

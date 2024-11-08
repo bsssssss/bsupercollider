@@ -1,0 +1,58 @@
+do
+setcps 0.6
+p 1
+  $ stack [
+    steps 4 $ 
+    -- while "0 0 0 0 1 0 0 0 0 0" (rev) $
+    stack [
+      struct "1 1 1 0 1 0"
+      $ s "909kit1"
+      # n 2
+      # note (slow 2 "-1.9 -2.2")
+      ,
+      struct "1 _ _ 1 0 0"
+      $ s "bs_sine"
+      # freq 50
+      # tilt 0.1
+      # hold 0.5
+      # slide ("<-2 -5>")
+      ,
+      struct "1"
+      $ s "leg_bd"
+      # n 43
+      # mu 10
+      # gain 0.8
+      ,
+      struct (fast 2 "0 1")
+      $ s "909kit1:3"
+      ,
+      struct (fast 2 "0 <0 [0 1]>")
+      $ s "909kit1:5"
+      ,
+      struct "1*1"
+      $ s "606kit1:6"
+      # legato 0.25
+      # combf (segment 1 $ rangex 10000 100 $ (slow 32 saw))
+      ,
+      echoWith 4 ("4 2"/16) (|* gain 0.9) $
+      -- struct "1 0 0 1 0 0 1 0"
+      struct "~ 1"
+      $ s "vcvperc"
+      # n 9
+      # legato 1
+      ,
+      struct "1"
+      $ s "stereos5"
+      # legato 0.5
+      # begin 0.2
+      # gain 1.1
+      ,
+      sh (1/2) $
+      struct "1"
+      $ s "stereos5"
+      # legato 0.75
+      # begin 0.26
+      # gain 1.1
+    ]
+    # mu 2
+  ]

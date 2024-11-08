@@ -1,0 +1,22 @@
+setcps 0.9
+
+
+p 1
+  $ stack [
+      slow 8 $
+      superimpose (slow (3/4) . (|+ n 29) . (|* gain 0.6)) $
+      jux rev $
+      superimpose (
+        fast (2/3) . (# tilt 0.5) . (# begin 0.1)
+      ) $
+      struct "1*16"
+      $ s "undoperc"
+      |+ n 9
+      # begin (segment 16 $ saw |+ 0.5 * 0.1)
+      # legato 4
+      # speed 0.3
+      |* speed ("1 2 1 2 2")
+  ]
+
+
+

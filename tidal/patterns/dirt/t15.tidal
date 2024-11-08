@@ -1,0 +1,38 @@
+setcps 0.5
+
+
+p 1
+  $ bite 4 (steps 1 $ "0 0 0 1 1 2@2 0 0 0 1 2 3@2 3@4")
+  $ stack [
+    note (scale "minor" $ steps 8 $ "0@4 1 2 3 0 8 7 5 4")
+    # s "leg_dx"
+    # n 91
+    # legato 1
+    # lpf 1000
+    ,
+    n (steps 8 $ "0!2 1 2")
+    # s "Acetone_Rhythm-King"
+    # mu 2
+    ,
+    slow 2 $
+    n (steps 16 $ "0@3 0@3 1@2 ~!4 1*8")
+    # s "Acetone_Rhythm-King"
+    |+ n 2
+    |* speed (segment 16 $ range 2 0.25 $ saw)
+    # mu 2
+    # legato 1
+    # br_f (segment 16 $ rangex 10000 1000 $ shrand 89)
+    ,
+    struct (fast 2 "1(3,8,<0!2 1!2>)")
+    $ s "505kit1"
+    # combf 9000
+    ,
+    mask "0 1" $ sh (3/4) $
+    struct (fast 2 "1(3,8,<0!2 1!2>)")
+    $ s "505kit1:2"
+    ,
+    sh ("<0 1>"/32) $
+    struct "[~ 1]*4"
+    $ s "909kit1:8"
+    # combf 10000
+  ]

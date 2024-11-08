@@ -1,0 +1,92 @@
+setbpm 140
+
+do
+resetCycles
+p 1
+  $ while "0!60 1!4" (bite 4 "0*2")
+  $ stack [
+      while "<0!3 <0 1>>" ((|* speed (segment 16 $ range 1 0.5 $ (fast 7 saw)))) $
+      mask "<1!15 [<1 0> 0]>" $
+      superimpose (
+        sh ("<3!16 -3!16>"/4) 
+        . (echoWith "<2 3>" ("<1!7 2 1!6 2!2>"/"<16!6 [8 16]!2>") (|* gain 0.9)
+        . (|+ n 1)
+        )
+      ) $
+      mask "<0!8 1!64>" $
+      while "<0!8 1!8>" (mask "0 1") $
+      mask "<1!7 <1 0>>" $
+      n (sh ("<0!4 1!4>"/2) "0 1([3 <3!3 0>],8)")
+      # s "Ensoniq_EPS"
+      |+ n "<5!7 10>"
+      |+ n ("<0!12 -1!4>")
+      |+ n "<0!32 2!32>"
+      # br_f 12000
+      # mu 1.3
+      # coarse 3
+      # sustain 0.3
+      # speed (0.8)
+      |* speed "1.2 1"
+      |* gain "1 0.9"
+      -- # silence
+      ,
+      mask "<0!16 1!16>" $
+      superimpose (
+        sh ("<1!8 4!4>"/8) . (# s "leg_sd")
+      ) $
+      struct "~ 1([3 0],8)"
+      $ s "505kit1:2"
+      # sustain 0.08
+      # note "[0,3]"
+      # mu 1.2
+      -- # silence
+      ,
+      mask "<0!16 1!112>" $
+      mask (slow 1 "<0!16 1!16>") $
+      begin (restart "<1@4>" $ steps 8 $ ("0@4 1@3 1@3") / 8)
+      # s "breaksthink"
+      # n 1
+      # unit "c"
+      # legato 1
+      # coarse "<3!2 2!2 1!2>"
+      # hpf 300
+      # mu 1.3
+      |* gain 0.92
+      -- # silence
+      ,
+      mask "<0!32 1!15 0 1!16>" $
+      sh (3/4) $
+      struct "1([3 0],8)"
+      $ s "vcvperc"
+      # n 8
+      # gain 0.9
+      ,
+      mask "<0!32 1!15 0 1!16>" $
+      slow 1 $
+      echoWith 5 (3/"<8!12 16!4>") (
+        (# accelerate (-1))
+        .(|* gain 0.98)) $
+      sh ("<0!3 -1!2>"/4) $
+      struct "1(3,8)"
+      $ s "vcvperc"
+      # n 21
+      |+ n "<0!8 -9!8>"
+      # sustain 0.2
+      # accelerate ("<-2!8 -0.3!4>")
+      |* speed (1.2)
+      |* gain 0.89
+      # mu 1
+      ,
+      slow "<1!24 2!8>" $
+      struct "1"
+      $ s "stereos3"
+      # n 8
+      # legato 1
+      # begin 0.4
+      |* begin (slow 16 $ segment 1 $ range 0.5 "<1.5!64 2!64>" $ shrand 89)
+      # mu 1
+      # gain 1.1
+      # br_f 500
+      # br_q 1
+      -- # silence
+  ]

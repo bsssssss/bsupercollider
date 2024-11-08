@@ -79,7 +79,8 @@ let
     jverbModDepth = pF "jverbModDepth"
     jverbModFreq  = pF "jverbModFreq"
 -- GRAIN ENV
-    tilt  = pF "tilt"
+    tilt = pF "tilt"
+    plat = pF "plat"
     -- hold  = pF "hold"
     -- curve = pF "curve"
 -- SYNTHS PITCH MODS

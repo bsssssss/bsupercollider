@@ -1,0 +1,108 @@
+setbpm 188
+
+do
+let gpat1 = gain (steps 8 $ "0.9 0.5 1@2 ~ ~ 0.4*2")
+p 1
+  $ slow 2
+  $ stack [
+      sh ("<0!32 1!32>"/2) $
+      sh (1/128) $
+      gpat1
+      # s "undoperc"
+      # note (scale "minor" "[0,3,4]")
+      # speed (1/3)
+      # legato 0.2
+      # begin 0.03
+      |* begin (segment 1 $ range 0.9 1.1 $ shrand 89)
+      |* gain 0.9
+      # lp2_f 400
+      # lp2_q 0.7
+      ,
+      sh (1/4) $
+      gpat1
+      # s "undoperc"
+      # n 9
+      # speed 0.01
+      # legato 1
+      |* gain 0.8
+      # pan (segment 16 $ saw)
+      ,
+      (slow 2 gpat1) # s "undobd"
+      ,
+      struct "1"
+      $ s "stereos3"
+      # begin 0.45
+      # legato 1
+      # gain 1.2
+      # n 4
+      ,
+      sh (3/4) $
+      struct "1"
+      $ s "stereos3"
+      # begin 0.363
+      # note (scale "minor" "[-14]")
+      # legato 2
+      # tilt 0.5
+      # hold 0.99
+      # gain 1
+      # curve 4
+      # mu 1
+      # n 5
+      # br_f 200
+      # br_q 3
+      ,
+      slow 4 $
+      struct "1([3 0],8,1)"
+      $ legato 1
+      # s "bs_sine"
+      # tilt 0
+      # hold 0.8
+      # note "a2"
+      # fshift (-4)
+      ,
+      struct "{1@8 0@24}%8"
+      $ s "jbk_sd"
+      # n "<8 7>"
+      # begin 0.003
+      # sustain 0.1
+      # speed (1/2)
+      # gain 0.7
+      ,
+      slow 8 $
+      sh (1/2) $
+      struct "{1@8 0@24}%8"
+      $ s "stereos2"
+      # n "5"
+      # begin 0.61
+      # legato 4
+      # speed (1)
+      # gain 0
+      ,
+      mask "<0 0 0 1>" $
+      note "1@3 0@12 <-4!4 ~!4 -5!4 ~!4> ~@8"
+      |+ note 23
+      # s "braids"
+      # model 14
+      # timbre (segment 2 $ shperlin 89)
+      # octave 3
+      # sustain 15
+      # tilt 0
+      # curve (-4)
+      # lp2_f (segment 1 $ rangex 500 1000 $ shrand 8)
+      # lp2_q 0.5
+      # gain 0.5
+      # orbit 1
+      # room 0.5
+      # size 0.5
+      ,
+      note (scale "minor" (steps 4 $ "0 <~ 1 1> _ _ _ _ _" |+ "<<[0,1] [-5,-6]> 1 ~>"))
+      # s "plaits"
+      # model 3
+      # timbre (range 0.2 0.5 $ segment 2 $ shperlin 45)
+      # morph (segment 2 $ shperlin 45)
+      # lp2_f 5000
+      # sustain 10
+      # tilt 0
+      # gain 0.7
+  ]
+  |+ fshift (2)

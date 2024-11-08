@@ -1,0 +1,43 @@
+setcps 0.8
+
+p 1
+  $ while "{0 0 1}%2" (superimpose (rev . press . (|* speed (2/3))))
+  $ while "{0 1 0 0 1}%2" (press . (|+ n 1) . (|* speed 4))
+  $ stack [
+      superimpose (
+        sh (1/4) . fast "<1 1 2 <2 1>> 2" . (|+ n 18) . (# sustain 0.2)
+      ) $
+      n "0*2 <4 3 2>"
+      # s "Cheetah_MD16"
+      ,
+      struct "1*2 ~ ~ ~"
+      $ s "Cheetah_MD16"
+      # n 6
+      # speed (segment 16 $ slow 4 sine + 1 * 7)
+      # legato 1
+      ,
+      struct "1(3,8)"
+      $ s "505kit1"
+      # shape 0.9
+      # accelerate (-1)
+  ]
+  |+ n "<0!7 1>"
+  |+ n "<0!16 3!4>"
+  # mu 2
+  |* gain 0.7
+
+p 2
+  $ jux rev
+  $ stack [
+      note (scale "minor" (while "<0 1>" (rolledBy (3/4))
+                          $ while "<1 0 0>" (rev)
+                          $ "[0,<2 1>,<~ ~ <3 1 -4>>]" 
+                          |+ "<2 0>"
+                          |+ (slow 4 "<3 1 2 0>")
+                          ))
+      # s "leg_kawaik4"
+      # n 149
+      # speed (1/3)
+      # legato 1
+      # lpf 1000
+  ]

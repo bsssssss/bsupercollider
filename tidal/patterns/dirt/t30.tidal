@@ -1,0 +1,39 @@
+setcps 0.8
+
+
+p 1
+  -- $ rev 
+  -- $ iter 2
+  $ while "<0 0 0 1> <0 <0 1 0 0 1>>" (sh (1/2) . rev)
+  $ stack [
+      struct "1 ~ ~ ~"
+      $ s "leg_korg"
+      # n 5
+      # legato 1
+      # speed 1
+      # accelerate (-1)
+      ,
+      superimpose (sh (3/4) . echoWith 3 (3/"<8 16>") (# n "<49 78>")) $
+      struct "<1*2 1> ~ [~ 1] ~"
+      $ s "leg_korg"
+      # n "2 3"
+      |* n 101
+      # legato 0.5
+      # silence
+  ]
+
+p 2 $ n (steps 8 $ "0 _ _ 0 _ _ 0 _ 1 2 1 _ 2")
+    # s "undoperc"
+    # legato 1
+    # gain 0.7
+    |* n 50
+    |* speed 2
+    # orbit 1
+    # room 0.9
+    # size 0.4
+
+
+
+all $ id
+
+all $ (|* speed "4 3 2 1")

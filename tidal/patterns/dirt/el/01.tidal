@@ -1,0 +1,42 @@
+setbpm 180
+
+p 1
+  $ stack [
+      superimpose (
+        (# n 2) . (|* speed 2) . sh (3/6) . (|* gain 0.4) . (# tilt 0) . slow 1
+      ) $
+      superimpose (
+        slow 2 
+        . (|+ n 1)
+        . (|* gain 2)
+        . (|+ up (-12 - 3))
+        . (# begin 0.3)
+      ) $
+      jux rev $
+      superimpose (
+        sh ("1!8 -1!6"/4) 
+        . (fast "2 4 2 4 4 <2 4>") 
+        . (|* gain 0.8)
+        . (# bpf 2000)
+      ) $
+      superimpose (
+        mask "0 1" . fast (2/3) . (|+ note 2)
+      ) $
+      note (
+        scale "minor" $
+        arp "up" "f'maj'6'ooooo'iiii"
+      )
+      # s "leg_dx200"
+      # n 110
+      # gain 0.8
+      # begin (segment 4 $ (slow (16*16*2) tri) * "0.2!16 0.5!16")
+      |* gain ("1 0.2")
+      # legato 1
+      |* speed (2)
+      |* gain 1
+  ]
+  # room 0.2
+  # size 0.1
+  # coarse 2
+  # lp2_f 2000
+  # lp2_q 0.1

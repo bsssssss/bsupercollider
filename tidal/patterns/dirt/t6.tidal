@@ -1,0 +1,21 @@
+setcps 1
+
+p 1
+  $ slow 1
+  $ slow 1
+  $ stack [
+    superimpose (fast (1/3.33) . (# tilt 0.4)) $
+    fast 1 $
+    juxBy 0.1 (rev . fast ((2/3)*8)) $
+    struct "1*128"
+    $ s "breaksuseme:1"
+    # legato 1.9
+    # begin (restart (slow 4 $ steps 1 $ s_cat ["1 _ _ _ _", "1*3"]) $ segment 128 (slow "<33 44>" saw ))
+    # unit "c" |* speed (1.2)
+    # mu 1
+    # br_f (segment 64 $ rangex 10000 60 $ (slow 5 tri))
+    # br_q 8
+    # shape 0.4
+    |* gain 1.4
+  ]
+  |* gain 0.8

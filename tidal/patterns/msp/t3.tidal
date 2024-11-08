@@ -1,0 +1,38 @@
+setcps 1
+
+
+do
+-- resetCycles
+p 1
+  $ slow 1
+  $ stack [
+      struct "1@4 1@2"
+      $ msp "i1"
+      # voice 1
+      # legato "<[1 0.5] 1!2>"
+      # freq 90
+      # const_loss 1
+      # n "1 0 <0 1> 0"
+      ,
+      slow 1 $
+      sh (2/4) $
+      struct "1@4"
+      $ msp "i1"
+      # voice 2
+      # legato 1
+      # freq_loss 0.1
+      # const_loss 0.1
+      # freq "80"
+      |* freq "<1!8 1.5!8>"
+      # n "0 1"
+      ,
+      struct "<1 _ _ _>"
+      $ msp "i1"
+      # voice 3
+      # freq 330
+      # freq_loss 1
+      # const_loss 0.1
+      # legato 1
+      # gain 0.9
+      # n "<0!4 1!4>"
+  ]

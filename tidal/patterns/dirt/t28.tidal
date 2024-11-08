@@ -1,0 +1,3 @@
+setcps 1
+
+p 1 $ superimpose (sh(2/8).rev.(|+ note 12)) $ note "c a f e f f5" # s "bs_sine"
