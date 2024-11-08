@@ -19,7 +19,7 @@
 );
 (
 SynthDef("lpf2" ++ ~dirt.numChannels, {
-	|out, in, sustain = 1, speed = 1|
+	|out, in, sustain=1, speed=1|
 	var signalDry, signal, freq, res, pre, mix, fenv;
 
 	var envV = (\lp2_fEnv.kr(0)).linexp(0, 1, 0.1, 20000);
