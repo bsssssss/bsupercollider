@@ -17,12 +17,12 @@ default (Pattern String, Integer, Double)
         oHandshake = False,
         oPort      = 7400,
         oBusPort   = Nothing,
-        oLatency   = 0.02,
+        oLatency   = 0.2,
         oSchedule  = Pre BundleStamp,
         oWindow    = Nothing
         }
-    mspFormat = OSC "/tidal/event/" $ Named {requiredArgs = ["msp"]}
-    msp = pS "msp"
+    mspFormat = OSC "/tidal/event/" $ Named {requiredArgs = ["s_max"]}
+    s_max = pS "s_max"
     bus = pI "bus"
 
     theoTarget = Target {

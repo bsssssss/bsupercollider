@@ -20,7 +20,7 @@ s.reboot { // server options are only updated on reboot
 	s.options.hardwareBufferSize   = 128;
 	// s.options.numInputBusChannels  = 0;
 	s.options.numBuffers           = 1024 * 256; // increase this if you need to load more samples
-	s.options.memSize              = 8192 * 64; // increase this if you get "alloc failed" messages
+	s.options.memSize              = 8192 * 16; // increase this if you get "alloc failed" messages
 	s.options.numWireBufs          = 2048; // increase this if you get "exceeded number of interconnect buffers" messages
 	s.options.maxNodes             = 1024 * 32; // increase this if you are getting drop outs and the message "too many nodes"
 	// boot the server and start SuperDirt
@@ -34,19 +34,27 @@ s.reboot { // server options are only updated on reboot
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
     
 		~dirt.doNotReadYet = true;
-		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/autodafe/*");
+    ~drumMachinesDir = Quarks.all.detect({ |x| x.name == "tidal-drum-machines" }).localPath;
+    ~dirt.loadSoundFiles(~drumMachinesDir +/+ "machines" +/+ "*" +/+ "*", namingFunction: { |x| x.basename.replace("-","")});
+		//~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/autodafe/*");
+		//~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/jbk/*");
+		//~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/mars/*");
+		//~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/legowelt/*");
+		//~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/ukg/*");
+		//~dirt.loadSoundFiles("/Users/bss/Documents/samples/zooms/bino/to_amb");
+		//~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos");
+		//~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos2");
+		//~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos3");
+		//~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos4");
+		//~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos5");
+		//~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/egms");
 		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/jbk/*");
-		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/mars/*");
 		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/rvbreaks/*");
-		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/legowelt/*");
-		~dirt.loadSoundFiles("/Users/bss/Documents/samples/tidal-samples/ukg/*");
-		~dirt.loadSoundFiles("/Users/bss/Documents/samples/zooms/bino/to_amb");
-		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos");
-		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos2");
-		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos3");
-		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos4");
-		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/zoom/stereos5");
-		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/egms");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/samples/jungle/junglebreaks");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/samples/jungle/junglebreaks2");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/samples/jungle/junglebreaks3");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/samples/tidal-samples/legowelt/*");
+		~dirt.loadSoundFiles("/Volumes/T7 Shield/sons/samples/tidal-samples/jbk/*");
 
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/tidal-banks.scd");
 		// s.sync; // optionally: wait for samples to be read
@@ -65,6 +73,7 @@ s.reboot { // server options are only updated on reboot
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/synths/config.scd");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/bs/fx/bs_fx.scd");
 		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/dirt-modules-order.scd");
+		load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/dirt_compressor.scd");
 		// load(PathName.new(thisProcess.nowExecutingPath).parentPath ++ "/scala.scd");
 
 		//~dirt.start(57120, [0, 2, 4, 6, 8, 10, 12, 14]); // 8 stereos out
