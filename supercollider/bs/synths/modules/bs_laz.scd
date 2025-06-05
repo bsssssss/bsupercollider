@@ -46,25 +46,18 @@ SynthDef(\bs_laz, {
 SynthDef(\bs_laz2, {
 	|out=0, freq=440, sustain=1, pan=0, begin=0, end=1, speed=1, accelerate=0, cps=0.5|
 
-	var snd, line, dur,
-        numPartials,
-	    ratios, inharmonics, comb_f1,
-	    mod1
-	;
-	var sampleDur  = SampleDur.ir;
-	var limit      = (SampleRate.ir * 0.5) * 0.2;
+	var snd, line, dur, numPartials, ratios, inharmonics, comb_f1, mod1;
+	var sampleDur = SampleDur.ir;
+	var limit     = (SampleRate.ir * 0.5) * 0.2;
 
 	dur  = sustain*(end-begin);
 	line = Line.kr(begin, end, dur, doneAction: Done.freeSelf);
 
 	mod1 = TiltEnv.ar(\mod1_tilt.kr(0), \mod1_hold.kr(0), \mod1_curve.kr(0), dur) * \mod1_amp.kr(1);
 
-
-	freq  = max(1e-4, freq * (1 + (accelerate * line)));
-	freq  = freq.cpsmidi + (SinOsc.kr(freq: \vibrato_rate.kr(6) * cps) * \vibrato_depth.kr(0));
-	freq  = freq.midicps;
-
-
+	freq = max(1e-4, freq * (1 + (accelerate * line)));
+	freq = freq.cpsmidi + (SinOsc.kr(freq: \vibrato_rate.kr(6) * cps) * \vibrato_depth.kr(0));
+	freq = freq.midicps;
 
 	numPartials = 50;
 	ratios = (1..numPartials);
@@ -74,18 +67,13 @@ SynthDef(\bs_laz2, {
 	snd = ratios.collect{ |ratio|
 		var localFreq, localPhase, taper, stretchRatio, tilt, localSnd;
 
-
 		stretchRatio = ratio * (1+ (inharmonics * ratio)).sqrt;
 		localFreq    = (freq * stretchRatio);
 
 		taper = 1 / (1 + exp (localFreq - limit));
 		tilt = (log2(ratio) * -3).dbamp;
 
-		// localPhase = Phasor.ar(0, localFreq * sampleDur);
-		// localSnd = sin(localPhase * 2pi);
-
 		localSnd = SinOsc.ar(localFreq);
-
 		localSnd = localSnd * tilt * taper;
 		LeakDC.ar(localSnd) ;
 	};
@@ -96,10 +84,8 @@ SynthDef(\bs_laz2, {
 
 	snd = snd.sum;
 	snd = LeakDC.ar(snd);
-	// snd.freqscope;
 
 	snd = snd * -6.dbamp;
-
 	Out.ar(out, DirtPan.ar(snd, ~dirt.numChannels, pan));
 }).add;
 )
