@@ -1,0 +1,69 @@
+setcps 0.5
+
+
+
+p 1
+  $ slow 1
+  $ stack [
+      note (scale "major" $ floor <$> (
+        fast 8 "[2,3] 0 ~"
+      ))
+      # s "plaits"
+      # timbre (steps 4 ("1 2 3 4"/5))
+      # bpf 1000
+      # tilt 0
+      # legato (segment 16 $ range 1 3 $ (fast (2/3) saw))
+      # amp (steps 8 ("3 4 3 2 3"/4))
+      ,
+      note (scale "major" $ floor <$> (
+        fast 8 "~ ~ <3 ~ ~ ~ 4>/8"
+      ))
+      # octave 4
+      # s "plaits"
+      # color 0
+      # timbre (steps 4 ("1 2 3 4"/5))
+      # bpf 1000
+      # amp (steps 8 ("3 4 3 2 3"/4))
+      # sustain 13
+      # tilt 0
+      # curve (-5)
+      ,
+      note (scale "major" $ floor <$> (
+        fast 7 "~ ~ 5" |+ "<0 2 1>"
+      ))
+      # s "plaits"
+      # color 0
+      # timbre (steps 4 ("1 2 3 4"/5))
+      # bpf 1000
+      # amp (steps 8 ("3 4 3 2 3"/4))
+      # sustain 0.04
+      # tilt 0.5
+      # curve (-5)
+  ]
+  # room 0.4
+  # size 0.8
+
+p 2
+  $ stack [
+      struct "{1 ~ [~ 1(3,8)] ~ [~ 1 ~]}%2"
+      $ s "undobd"
+      # accelerate (-0.1)
+      ,
+      struct "{~ 1 ~ 1 ~ ~ [~ 1 ~ ~]}%4"
+      $ s "leg_sd"
+      # sustain 0.1
+      ,
+      ply "{2 2 4}%2" $
+      sh (3/8) $
+      struct "{~ 1 ~ 1 ~ ~ [~ 1 ~ ~]}%4"
+      $ s "leg_sd"
+      # sustain 0.1
+      # note 2
+      # gain 0.9
+      ,
+      struct "1*4"
+      $ s "leg_hh"
+      # mu 1
+  ]
+  # shape 0.3
+  # orbit 1

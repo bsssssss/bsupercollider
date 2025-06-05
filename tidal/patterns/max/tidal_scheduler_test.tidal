@@ -1,0 +1,30 @@
+setcps 1
+
+p 1 
+  $ jux (slow 3)
+  $ stack [
+    -- jux (sh ((1/4) |+ 1)) $
+    slow 2 $
+    superimpose (restart "1*4") $
+    n (scale "minor" (run 16 * "<[1 2] [<1 2>]>" |+ "1 2"))
+    # s "bs_sine"
+    # tilt "0 0.9"
+    # sustain 0.08
+    # gain 0.7
+    ,
+    struct (steps 4 "1 _ 1 _ _ 1*2 _")
+    $ s "rolandtr808bd"
+    # gain 2
+    ,
+    sh (1/2) $
+    struct (steps 6 "1 _ 1 _ _ 1*2 _")
+    $ s "rolandtr808bd"
+    # gain 2
+    # speed 9
+    ,
+    sh (3/4) $
+    struct (steps 3 "1 _ 1 _ _ 1*2 _")
+    $ s "rolandtr808hh"
+    # gain 2
+    # speed 1
+  ]

@@ -1,0 +1,39 @@
+setcps 0.5
+
+p 1
+  $ stack [
+      superimpose (
+        sh (1/2) . (|* gain 0.9) . rev
+      ) $
+      mask "[0 1 0]/0.75" $
+      note (scale "minor" $ run 8 + "<0 -1 0 [-1 -2]>")
+      # s "braids"
+      # sustain 2
+      # bpf 400
+      # tilt 0
+      ,
+      slow (2/3) $
+      mask "[0 1 1]/0.75" $
+      note (scale "minor" $ run 8 * 2 + (-8))
+      # s "superpiano"
+      # sustain 4
+      # tilt 0.2
+  ]
+
+p 2
+  $ superimpose (
+    sh (3/8) . (|+ n 300) . (# fshift (-100))
+  )
+  $ while "<0 0 0 1>*3" (sh (5/8)) 
+  $ stack [
+      struct "1(3,8)"
+      $ s "undobd"
+      # sustain 1
+      # tilt 0
+      ,
+      sh ("-1 -1 <1 1 -2>"/8) $
+      struct "1"
+      $ s "leg_sd"
+      # sustain 0.08
+  ]
+

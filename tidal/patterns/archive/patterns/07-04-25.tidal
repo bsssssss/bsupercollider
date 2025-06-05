@@ -1,0 +1,30 @@
+setbpm 180
+
+p 1 
+  $ mask "<0!8 1!16> <1!15 0>"
+  $ off ("<1 3>"/"<8!4 4!2>") ((|+ n 1) . (|* speed (segment 16 $ range 1 4 $ tri)) . (|* gain 0.8)) 
+  $ bank "rolandtr808" (steps 2 $ "[bd hh sd bd] _ <[~ oh]*2> [hh*2 sd] hh*<8 16>")
+  # legato 1
+  # shape 0.5
+  # speed 1
+
+p 2
+  -- $ note (scale "minor" $ (steps 2 $ "0 _ 3 2 3" +| ("[0 0 0 -6, 1, 2 2 3 2 [[2 3] ~ [4 5] ~]]")))
+  $ n (steps 4 "0 _ 0 _ _" |+ "[0,1,2,6]" |+ "<0 [1 -1]>" |* "<1 -1>")
+  # s "bs_sine"
+  -- # sustain 0.2
+  # legato 0.25
+  # tilt 0
+  # curve (0)
+  # gain 0.7
+  |* n 2
+  # pitch_env (-1)
+
+
+p 3 
+  $ stack [
+      mask "<1!16 0!4>" $
+      bank "rolandtr909" (steps 8 "bd _ _ bd _ sd _"),
+      bank "rolandtr909" (steps 8 "~ hh*<1 8> ~ ~ ~ ~ ~ lt _")
+      # speed 2
+    ]

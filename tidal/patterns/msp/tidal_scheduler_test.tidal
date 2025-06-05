@@ -1,5 +1,0 @@
-setcps 0.5
-
-p "test" 
-  $ n "1 2 3 4"
-  # s "test"

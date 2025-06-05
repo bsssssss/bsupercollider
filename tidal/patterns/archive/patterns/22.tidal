@@ -1,0 +1,57 @@
+setcps 0.8
+
+p 1
+  $ stack [
+      superimpose (
+        sh ("<0!9 3!1.125>"/8) .
+        sh (1/4) . (|+ n 19) . (# accelerate 0) . (# gain 0.8) . (# sustain (segment 1 $ range 0.1 0.3 $ shrand 12))
+        . (# combf 1000)
+      ) $
+      stack [
+        superimpose (
+          sh (1/8) 
+          . (# s "leg_sd")
+          . (# sustain 0.1)
+        ) $
+        struct "1@3 1@2"
+        $ s "leg_bd:100"
+        # accelerate (-0.9)
+        # legato 0.5
+      ]
+      -- # silence
+      ,
+      superimpose (
+        sh ("<1 2>"/4) . (|+ n 1) . (# bpf 2000) . (# bpq 2) . (# sustain 0.2)
+      ) $
+      stack [
+        struct "{1@4 ~@4 ~@2 1 ~@4}%8"
+        $ s "undobd"
+        ,
+        struct "{0@4 1@4 ~@2 0 1@4}%8"
+        $ s "leg_sd"
+        # n 3
+      ]
+      ,
+      superimpose (
+        slow 1.7 . (|+ note "4")
+      ) $
+      superimpose (
+        slow 1.02 . (|+ note "2")
+      ) $
+      struct "{1@9}%1"
+      $ s "leg_kawaik4:85"
+      # legato 1
+      # mu 2
+      # bpf 4000
+      # orbit 1
+      # size 0.93
+      # room 0.7
+      # gain 0.9
+      # note (-8)
+      ,
+      sh ("<0 <2 ~>>"/4) $
+      struct "~ 1"
+      $ s "leg_sd"
+      # n 23
+      # sustain 0.1
+  ]

@@ -1,0 +1,35 @@
+setbpm 180
+
+p 1
+  $ stack [
+      struct "1"
+      $ s "junglebreaks2"
+      # n 13
+      # speed (1/2)
+      # begin ("<1 <0 2>>"/8)
+      # legato 1
+      # unit "c"
+      ,
+      slow 2 $
+      struct "1"
+      $ s "leg_kawaik4"
+      # n 146
+      # legato 1
+      # speed (2/3)
+      ,
+      fast 2 $ 
+      stack [
+        struct "~ 1 ~ [~ <1 0 1 0 0>]"
+        $ s "rolandtr808bd"
+        # n 1
+        # mu 4
+        ,
+        sh ("{1 1 1 2 1 1 2}%8"/4) $
+        struct "~ 1 ~ [~ 1]"
+        $ s "rolandtr808sd"
+        # n 1
+        # mu 2
+        # speed (1)
+        # gain (segment 16 $ range 0.7 1 $ rand)
+      ]
+  ]

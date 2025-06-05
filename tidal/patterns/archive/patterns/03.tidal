@@ -1,0 +1,47 @@
+setbpm 180
+
+p 1 
+  $ stack [
+      while "<0 0 0 1>" (rev . iter 4) $
+      while "<<0 0 1> 0>" (iter 2) $
+      stack [
+        mask "<1!15 0 1!16 0!4>" $
+        n "0 <~ [1 [2 1]*2]>"
+        # s "Casio_MT-18"
+        # speed (1/2)
+        ,
+        mask "<0!8 1!12 0!4 1!8>/2" $
+        while "<0!6 1!2>" (slow 2) $
+        superimpose (
+          rev . (|+ n 1) . (|* gain 1.1)
+        ) $
+        sh ("<3 -1>/2"/8) $
+        n ("0 <~ [1 [2 1]*2]>" |+ 5)
+        # s "Casio_MA-101"
+        # speed "1 1 1 1.5"
+        |* speed (3)
+        # sustain 0.1
+        |* gain 0.8
+      ]
+      # mu 1
+      ,
+      note (
+        scale "minor"
+        $ (while "<0 0 1>" (rev) $ "0(3,8)") |+ "[0,1,2]" |+ "<4 2 3 1>" |+ "<0 <3 2>>/4"
+        )
+      # s "leg_dx"
+      # n 6
+      # begin 0.02
+      # legato 2
+      # gain 0.8
+  ]
+
+p 2
+  $ while "<0 0 0 1>" (rev . iter 4 . fast "2 1 2 [4 1]")
+  $ stack [
+      mask "<1!16 0!8 1!16 0!4>" $
+      n ("0 <1 6> [~ 0] 1" |* 2)
+      # s "Cheetah_SpecDrum"
+      # legato 1
+      # mu 2
+  ]

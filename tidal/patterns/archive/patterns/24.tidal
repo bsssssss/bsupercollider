@@ -1,0 +1,52 @@
+
+setcps 0.6
+
+do
+let s1 = "1*2 ~ <1 ~> ~"
+p 1
+  $ while "<0 0 <1 0> <0 0 1>>/1.125" (jux (sh (1/16) . slow 2) . (# room 0.1) . (# bpf "[100, 5000]") . (# mu 1.1))
+  $ stack [
+      superimpose (
+        sh ("<3@1.5 -1>*0.75"/"<16 8>/3") . (# s "leg_bd") . (# n 39) . (|* gain 0.7) . (# sustain 0.1)
+      ) $
+      swingBy (1/4) 4 $
+      struct s1
+      $ s "undobd"
+      ,
+      sh 1 $
+      sh (1/4) $
+      struct s1
+      $ s "leg_hh"
+      ,
+      sh (1/16) $ rev $
+      sh 1 $
+      sh (1/4) $
+      struct s1
+      $ s "leg_hh"
+      |+ note 2
+      ,
+      slow 2 $
+      superimpose (
+        sh ("<1@1.5 -1>*0.75"/16) . (|+ note 1)
+      ) $
+      sh ("<0!3 5>"/8) $
+      struct "[~ 1 ~ ~] 1"
+      $ s "leg_sd:20"
+      # sustain 0.04
+      # gain 0.7
+      ,
+      swingBy (1/3) 2 $
+      struct (steps 8 "~@3 1@2 ~@3 1@3 [1*2]@3")
+      $ s "leg_sd"
+      # sustain 0.1
+      # gain 0.8
+  ]
+
+p 2
+  $ stack [
+      note (scale "minor" "[0,2,3]" |+ (-8) |* "<0.9 1.1>/4")
+      # s "braids"
+      # lpf 500
+      # gain 0.67
+  ]
+  # orbit 1

@@ -1,0 +1,48 @@
+setcps 0.9
+
+
+p 1
+  $ stack [
+      sh ("<1 2 3>"/4) $
+      echoWith 8 (1/"[6|8|12|16]") ((|* gain 0.9).(|* speed (1.2))) $
+      struct "1"
+      $ s "undobd"
+      ,
+      sh 16 $
+      sh ("<1 2 3>"/4) $
+      echoWith 8 (3/"[6|8|12|16]") ((|* gain 0.9).(# pan (segment 32 $ sine))) $
+      struct "1"
+      $ s "leg_hh" # n 12 # sustain 0.1 # tilt 0
+      # speed (segment 16 $ range 4.1 4.2 $ sine)
+      |* speed 0.4
+      # sustain 0.09
+      ,
+      iter "<1 1 1 2>" $
+      while "<0 0 1>" (echoWith 3 (3/8) (|* gain 0.99)) $
+      struct "~ 1"
+      $ s "leg_sd"
+      # n 15
+      # sustain 0.04
+      ,
+      sh 2.75 $
+      iter "<1 1 1 2>" $
+      while "<0 0 1>" (echoWith 2 (5/8) (|* gain 0.9)) $
+      struct "~ 1*2"
+      $ s "leg_sd"
+      # n 38
+      # sustain 0.06
+      # tilt 0
+      ,
+      superimpose (
+        sh (31.25)
+        . (# model 2)
+        . (# tilt 0.9)
+        . (# legato 2)
+      ) $
+      note (scale "minor" $ (steps 4 "0@3 -2@5 ~ 1@4 [5 ~ 6 ~ ~]@4" |+ "<[0,1,2] [-2,0,2]>"))
+      # s "braids"
+      # bpf ( 1000 |* (segment 1 $ range 0.5 2 $ shrand 89) )
+      # gain 0.8
+      -- # tilt 0
+      # legato 1
+  ]

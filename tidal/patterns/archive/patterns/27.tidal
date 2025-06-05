@@ -1,0 +1,41 @@
+setcps 0.6
+
+
+
+p 1
+  $ restart "{1@3 1@2 1@4 1@4}%4"
+  $ stack [
+      struct "1*16"
+      $ s "undobd"
+      # sustain 0.1
+      # tilt 0
+      # amp (restart (fast 2 "{1@5 1@7 1@7}%8") $ segment 16 $ saw)
+      ,
+      sh (1/2) $
+      struct "1*2"
+      $ s "undobd"
+      # sustain 0.1
+      # tilt 0
+      # speed 9
+      # gain 0.8
+      # amp (restart (fast 2 "{1@5 1@7 1@7}%8") $ segment 16 $ saw)
+      ,
+      sh (-1/16) $
+      struct "1*2"
+      $ s "bs_noise"
+      # sustain 0.08
+      # tilt 0
+      # gain 1
+      # fshift 4000
+      ,
+      fast 2 $ sh(1/4) $
+      struct "1([3 0],8)"
+      $ s "leg_hh"
+      ,
+      fast 2 $ sh(3/4) $
+      struct "1(3,8,<2!8 0!6>)"
+      $ s "leg_hh"
+      # note 4
+      # legato 1
+      # accelerate (-0.8)
+  ]

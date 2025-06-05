@@ -1,0 +1,76 @@
+setcps 0.87
+
+
+p 1
+  $ slow 2
+  $ superimpose (
+    sh (5/8) . (|+ n 9) . slow 2 . (# tilt 0) . (# sustain 0.1) . (|* speed 0.5)
+  )
+  $ chew 3 (slow 2 "0@2 1@3 0")
+  $ superimpose (
+    superimpose (
+      mask "<0 1>" . (|+ n 2) . (|* speed 2 )
+    ) .
+    sh (1/8) . rev . (|* gain 0.8) . (|+ n 10) . ply "1 1 1 4"
+  )
+  $ stack [
+      echoWith 2 (3/8) (|* gain 1) $
+      n "0"
+      # s "Casio_Rapman"
+      # gain (segment 16 $ range 0.5 1 $ shperlin 12389)
+      ,
+      sh (1/4) $
+      echoWith 2 (5/8) (|* gain 1) $
+      n "2"
+      # s "Casio_Rapman"
+      # gain (segment 16 $ range 0.5 1 $ shperlin 89)
+      ,
+      sh (3/4) $
+      n "3"
+      # s "Casio_Rapman"
+      |* speed (1/3)
+      # bpf (segment 16 $ rangex 300 6000 $ shrand 89)
+      # bpq 5
+      # gain (segment 16 $ range 1 0.8 $ shperlin 12389)
+      ,
+      slow 2 $
+      struct "~ 1(3,8)"
+      $ s "leg_bd"
+      # mu 4
+      |* speed 3
+      # bpf (segment 16 $ rangex 300 6000 $ shrand 89)
+      # bpq 5
+      # gain (segment 16 $ range 0.8 1 $ shperlin 1231289)
+  ]
+  |* speed (1)
+  # sustain 0.3
+  # mu 1.2
+  # shape 0.2
+
+p 2
+  $ stack [
+      slow 4.125 $
+      n "0"
+      # s "leg_kawaik4"
+      # n 199
+      # gain 1
+      # speed ("<1 2 1.125>"/3)
+      ,
+      slow 4 $
+      n "0"
+      # s "leg_kawaik4"
+      # n 199
+      # gain 1
+      # speed ("<1 2>"/3)
+      ,
+      slow 4 $
+      n "0"
+      |+ note (scale "minor" "[2,3]")
+      # s "leg_kawaik4"
+      # n 199
+      # gain 1
+      # speed (1/3)
+      # sustain 0.6
+  ]
+  # mu 1.2
+  |* speed (2/3)

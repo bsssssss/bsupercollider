@@ -1,0 +1,100 @@
+setcps 0.4
+
+
+p 1
+  $ while "<1 0 0 0>" (echoWith 2 (3/16) (|* gain (0.9)).(|+ n 1))
+  $ while "<1 0>" (iter 2)
+  $ while "<0 <0 1 0>>" (sh (-1/4))
+  $ stack [
+      sh ("{0 1 1}%2"/8) $
+      struct "1@3 1@3 ~@2"
+      $ s "jbk_bd"
+      ,
+      sh (1/"{2 4 8}%2") $
+      struct "~@3 1@3 1@2"
+      $ s "jbk_rim"
+      ,
+      sh (1/8) $
+      sh (1/"{2 4 8}%3") $
+      struct "[0 1]@3 1*2@3 [0 1]@2"
+      $ s "jbk_rim"
+      # up 12
+      ,
+      sh (3/8) $
+      sh (1/"{2 4 8}%3") $
+      struct "[0 1]@3 [0 1]*2@3 1@2"
+      $ s "jbk_hh"
+      # up 5
+      # gain 0.9
+      ,
+      sh (-1/4) $
+      struct "~ <~ 1>"
+      $ s "505kit1:2"
+      ,
+      jux rev $
+      struct "<~ 1*8>"
+      $ s "606kit1:5"
+      # gain (segment 16 $ fast 3 saw)
+      # speed (segment 16 $ range 1 0.2 $ isaw)
+      ,
+      sh (1/8) $
+      begin (
+        (steps 4 "0 3 _ 2") / 8
+      )
+      # s "rvbreaks5"
+      # n 2
+      # legato 0.75
+      # gain 0.9
+      # unit "c"
+  ]
+  # mu 1
+  # lp2_f 3000
+
+
+do 
+let off = (0)
+p 2 
+  $ stack [
+      note (
+        scale "minor"
+        $ (steps 4 "0@6 3@4") |+ "[0,<2 1>,<3>]" |* 1 |+ off
+      )
+      # s "plaits"
+      # lpf 300
+      # sustain 3
+      # tilt 0
+      ,
+      superimpose (
+        sh 0.25 . (|+ note 12) . fast "{1 2 2 1 2 1 2 2 1 1 1}%2"
+      ) $
+      note (
+        scale "minor"
+        $ (steps 4 "0@3 3 2@4 ~@6 [6 5]!2 4@5") |+ "{2 1 0 -2}%2" |+ off
+      )
+      # s "plaits"
+      # octave 6
+      # model 1
+      # lpf 1000
+      # timbre 0.25
+      # sustain 3
+      # tilt 0.0
+      # gain 0.7
+      ,
+      fast 2 $
+      fast "{1 2 1 2 2}%2" $
+      note (
+        scale "minor" (steps 4 "0@3 4@2 3@4 2@3") |+ off
+      )
+      # s "plaits"
+      # octave 3
+      # model 1
+      # lpf 400
+      # tilt 0
+      # legato 0.2
+  ]
+
+p 3
+  $ stack [
+  ]
+
+hush

@@ -1,0 +1,83 @@
+setcps 0.7
+
+
+p 1 $
+  -- chew 16 "[0 1 2]*3" $
+  stack [
+    struct "1*16" $ s "leg_hh"
+    # gain (segment 16 $ (fast "<1 1.5 3>") saw)
+    ,
+    sh (1/4) $
+    struct "1*4" $ s "leg_hh" # n 10
+    # gain (segment 16 $ (fast "11") saw)
+    ,
+    superimpose (
+      sh (1/4) . (|* speed (1/12))
+    ) $
+    slow 2 $
+    sh (1/2) $
+    struct "1*8" $ s "leg_dx" # n 50
+    # gain (segment 16 $ (fast "13") saw)
+    # note (segment 16 $ (fast "11") saw * 12)
+    |* speed "[1]"
+    # sustain 1
+    ,
+    struct "1(3,8)" $ s "leg_bd" # n 49
+    # gain (segment 16 $ rev $ (fast "<1 1.5 3>") saw)
+    ,
+    mask "1 0" $
+    struct "1*16" $ s "leg_bd" # n 2
+    # gain (segment 16 $ (fast "<1 1.5 3>") saw)
+    |* speed 9
+    ,
+    sh (1/4) $
+    struct "1"
+    $ freq 80
+    # s "bs_sine"
+    # pitch_env 4
+    # tilt 0
+    # accelerate (-1)
+    ,
+    superimpose (sh (0/8) . swingBy ("[3 1]/1.5"/4) 2 . (|+ n 90)) $
+    struct "1 1*2"
+    $ s "jbk_bd"
+    # n 10
+    # mu 1
+    ,
+    superimpose (
+      fast 1.5 . (|+ n 2)
+    ) $
+    fast 1 $
+    superimpose (sh (1/8) . swingBy ("[2 1.5]/1.5"/4) 2 . (|+ n 1)) $
+    struct "1 1*[2 5]"
+    $ s "leg_perc"
+    # n 49
+    # mu 1
+    # tilt 0.3
+    # sustain 0.1
+    ,
+    sh ("<0 -1 0 3>"/8) $
+    slow 2 $
+    echoWith 2 (3/16) (|* gain "0.9 1.1") $
+    struct "~ 1 ~ ~"
+    $ s "leg_sd"
+    # sustain 0.1
+  ]
+
+p 2 $
+  juxBy 0.1 (rev . (|+ n 19)) $
+  stack [
+    swingBy ("[1 2 3]/1.5"/8) 2 $
+    struct "1*8" $ s "leg_hh" # speed (segment 16 $ range 1 3 $ saw)
+    ,
+    sh (1/16) $
+    swingBy ("[1 2 <3 2 1>]/1.5"/12) 2 $
+    struct "1*4" $ s "leg_bd" # n 4
+    ,
+    sh (0/16) $
+    swingBy ("[1 2 <3 2 1>]/1.5"/8) 2 $
+    struct "1(3,8)" $ s "leg_bd" # n 4 # gain 0.8
+    ,
+    struct "[~ <1 1 1 ~>]*4"
+    $ s "leg_hh" # n 1 # sustain 0.1
+  ]

@@ -1,0 +1,25 @@
+setcps 0.5
+
+p 1
+  $ slow 4
+  $ juxBy 0.1 (slow (3/2) . (# tilt 0.09) . (# sustain 0.1))
+  $ fast 5
+  $ sh (segment 32 $ range 0 1 $ (slow (5/8) saw))
+  $ sh (segment 32 $ range 0 (4/5) $ (slow 1.00021 saw))
+  $ (|+ n (segment 16 $ range 1 4 saw))
+  -- $ chew "4 3 <18 1>" "[1 0]*[3 4 5]"
+  $ stack [
+      superimpose (
+        pressBy "0.5 0.5 0.25" . (|+ n 1)
+      ) $
+      n "0*4"
+      ,
+      sh (3/8) $
+      superimpose (
+        pressBy "0.5 0.5 0.25" . (|+ n 1)
+      ) $
+      n "0*4"
+      |+ n 3
+      # sustain 0.1
+  ]
+  # s "Kawai_R-50e"

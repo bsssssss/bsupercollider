@@ -1,0 +1,19 @@
+setcps 0.9
+
+p 1 $ 
+  stack [
+    superimpose (
+      sh 12 . (|+ n 100) . (|* gain 0.9)
+    ) $
+    while "[0 [0 1]]/1.23" (fast "2 1") $
+    superimpose (
+      press . (|+ n "[1 <2 3 4 5>]*1.5")
+    ) $
+    superimpose (sh ("0 2"/16) . rev . (|+ up 12)) $
+    note (struct "1*2" $ (slow 5 saw) * 18)
+    # s "leg_dx200"
+    # n 19
+    # sustain 1
+    # tilt 0
+    |* n "1 4"
+  ]

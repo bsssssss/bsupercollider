@@ -1,0 +1,83 @@
+setcps 0.4
+
+
+
+do
+let
+  pats = 
+    [
+     "0 [1 2] 4"
+    ,"0 2 -1 4"
+    ]
+p 1 
+  $ slow 1
+  $ jux (slow (2/3) . (|* note 2))
+  $ note (scale "minor" $ floor <$> 
+            (pickP "<0 1>/0.75" pats)
+            |+ "<3 2 0>*1.235") 
+  # s "braids"
+  # model 34
+  |* note (while "<0 0 1>" (rev) $ "[1 1.5 2]")
+  # sustain (segment 16 $ range 0.2 1 $ (slow 1.6 tri))
+  # fshift (segment 1 $ range (-10) 10 $ tri |* (slow 5 $ shperlin 13219))
+
+p 2
+  $ superimpose (
+    sh (3/4) . (fast 2) . mask "0 1" . (|* speed 1.5) . (|* gain 0.9)
+  )
+  $ slow 1
+  $ stack [
+      struct "~@5 1*2"
+      $ s "undobd"
+      ,
+      sh (1/2) $
+      struct "~@5 1*2"
+      $ s "undobd"
+      # speed 9
+      # gain 0.7
+      ,
+      struct "~ 1"
+      $ s "bs_noise"
+      # sustain 0.1
+      # gain 0.99
+      # tilt 0
+  ]
+  # fshift (segment 1 $ range (-10) 10 $ tri |* (slow 3 $ shperlin 19))
+
+all
+  $ while "0 <1 0>" (|* note 1.25)
+  . while "<1 0@2>/1.5" (superimpose (press . slow 2 . iter 4 . (|+ note 12) . (# sustain 0.1)))
+  
+
+all $ id
+
+p 1
+  $ slow 1
+  $ note (scale "major" $ floor <$> (fast 8 "3@1.5 0 2 0" |+ (-2)))
+  |* note (segment 16 $ (fast (5/6) tri * 0.02) + 1)
+  # s "braids" # model 18
+  # timbre 0.1
+  # color 0.8
+  # bpf 600
+  # sustain (steps 16 $ "1 2 1 2 3" |* (segment 16 $ rangex 0.1 1.5 $ (slow 16 $ shperlin 89)))
+  # gain (steps 16 $ ("5 3 _ 5 6 3 4 3 4") |/ 5)
+  |* gain 0.7
+
+
+p 2
+  $ superimpose (
+    slow "[4.5, 4]" . (# gain 0.8) . (|+ note 0) . rev
+  )
+  $ sh 1000
+  $ slow (2/3)
+  $ note (scale "major" $ floor <$> (fast 8 "4 3 2 1" |+ 0))
+  |* note (segment 16 $ (fast (5/6) tri * 0.01) + 0.997)
+  # s "braids" # model 18
+  # timbre 0.2
+  # color 0.1
+  # bpf 500
+  # sustain (steps 16 $ "1 2 1 2 3" |* (segment 16 $ rangex 0.1 0.5 $ (slow 16 $ shperlin 89)))
+  # gain (steps 16 $ ("2 5 5 6 3 4 3 4") |/ 5)
+  |* gain 0.6
+
+all $ bite 8 "0@2 1@3 2@4" . slow 0.2

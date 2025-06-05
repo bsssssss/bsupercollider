@@ -1,0 +1,29 @@
+p 1
+  $ superimpose (
+    sh ("-1 5"/16) . (|+ n 2) . (|* gain 0.7) . mask "<0 0 1> 1"
+  )
+  $ superimpose (
+    (|+ n 9) . (# legato 1) . sh ("<0 1 2 3>/2"/8)
+  )
+  $ stack [
+      n (rev "0 1 ~ [0 1]")
+      |* n 1
+      # s "Alesis_HR16A" 
+      ,
+      n (slow 2 "0 1 ~ [0 1]")
+      |* n 10
+      # s "Alesis_HR16A" 
+      # gain 0.9
+  ]
+  # lp2_f 1700
+  # lp2_q 0.2
+  # mu 2
+
+
+p 2
+  $ superimpose (sh (2/4) . (|* speed (2/3)))
+  $ begin (struct (steps 8 "1*2 1 _ 1*2 ~ 1 ~") $ (slow 0.3 saw) * 0.8)
+  # s "leg_dx"
+  # n 29
+  # legato 0.8
+  # up (-4)

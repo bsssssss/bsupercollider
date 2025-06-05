@@ -1,0 +1,29 @@
+setcps 0.8
+
+xfadeIn 1 16 $
+  stack [
+      slow 4 $
+      superimpose (
+        slow 2.1 . (|* gain 0.8)
+        . (|+ up (-7))
+        . (|* begin 0.5)
+      ) $
+      superimpose (
+        slow (6/4.1) 
+        . (|+ up 2)
+        . rev
+      ) $
+      begin (struct "1*16" $ (slow 4 saw) * 0.004 |+ (2/3))
+      # s "leg_dx"
+      # n "0"
+      |+ n 129
+      # gain (segment 16 $ range 0.8 1 $ shrand 120)
+      # legato 3
+      # tilt 0.5
+      # bpf 400
+      |* speed "[1,0.5]"
+      |* speed ("[2@3 ~,[1 ~]/1.4]"/3)
+      |* speed 0.5
+      # room 0.8
+      # size 0.3
+  ]

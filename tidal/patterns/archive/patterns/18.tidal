@@ -1,0 +1,29 @@
+setcps 0.6
+
+p 1
+  $ superimpose (sh ("[1 2]/1.5"/16) . (|* gain 0.8) . (|+ note "<7 12 7 10>"))
+  $ stack [
+      superimpose ((# s "bs_noise") . (# tilt 0.9) . (# legato 0.5) . (# gain 0.7)) $ 
+      struct "1*4"
+      $ s "leg_bd:38"
+      # legato 0.4
+      # speed 1
+      # accelerate (-0.6)
+      ,
+      superimpose (sh (3/16) . (|+ n 101)) $
+      sh ("0 0 3"/16) $
+      struct (sh (1/2) $ "1*2")
+      $ s "leg_sd"
+      # sustain 0.1
+      ,
+      mask "[0 <1 0>]/1.5" $
+      struct "1*16"
+      $ s "leg_hh"
+      # legato 1
+      # gain 1.2
+      ,
+      note (steps 4 "2@3.5 0@4 4@3 -2@4")
+      # s "leg_dx"
+      # n 104
+      # legato 1
+  ]

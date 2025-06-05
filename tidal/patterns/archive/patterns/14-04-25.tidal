@@ -1,0 +1,30 @@
+setbpm 180
+
+p 1
+  $ slow 2
+  $ jux (rev . sh(0.125))
+  $ while (steps 4 "0 1 0 1@2") (|* speed 2)
+  $ stack [
+    struct (steps 8 $ "1*2 1 ~ ~")
+    $ bank "rolandtr808" "bd"
+    ,
+    struct (steps 8 $ sh (3/4) $ "1*2 1 ~ ~")
+    $ bank "rolandtr808" "sd"
+    ,
+    fast 2 $
+    while "<0 1>" (ply 4) $
+    struct (steps 8 $ sh (1/4) $ "1*2 1 ~ ~")
+    $ bank "rolandtr808" "hh"
+  ]
+  |+ n "0 1"
+  |* gain 0.8
+  
+p 2
+  $ stack [
+      slow 2 $
+      n "<105>"
+      # s "leg_kawaik4"
+      # legato 1
+      |* gain 1
+      |* speed (1/3)
+  ]

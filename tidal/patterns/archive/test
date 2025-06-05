@@ -1,0 +1,10 @@
+setcps 0.5
+
+p 1
+  $ stack [
+      n (run 16 * 99)
+      # s "leg_bd"
+      # legato 1
+  ]
+
+hush
