@@ -1,0 +1,37 @@
+setbpm 180
+
+p 3
+  $ stack [
+    struct "{~ 1@5 ~ 1@1.5 1}%8"
+    $ note ((scale "minor" "[0,1,2]") |* 1)
+    |+ note "0 3 2"
+    # s "braids"
+    # model 14
+    # lp2_f 2000
+    # legato 0.25
+    # tilt 1
+    # gain 1.2
+  ]
+
+p 1
+  $ sometimes (|* speed (2))
+  $ begin (steps 4 ("0 1 0 [1 2] 2"/8))
+  # s "junglebreaks"
+  # legato 1
+  # unit "c"
+  # n 9
+  # combf 1000
+
+
+p 2
+  $ sometimes (|* speed (2))
+  $ begin (steps 4 ("0 1 0 [1 2] 2"/8))
+  # s "junglebreaks"
+  # legato 1
+  # unit "c"
+  # n 25
+  # combf 2000
+  |* speed (0.5)
+  # mu 10
+
+hush
