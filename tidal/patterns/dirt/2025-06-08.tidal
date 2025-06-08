@@ -1,0 +1,45 @@
+setbpm 160
+
+p 1 
+    $ juxBy 0.1 (sh (-1/32) . (|* speed 2) . slow 8)
+    $ stack [
+        struct "<1(3,8) [~ 1] 1(3,8) [1 1(3,8,<1 0 1 -1>)]>"
+        $ s "rolandtr808bd:1"
+        # legato 1
+        # tilt 0
+        # curve (16)
+        # accelerate (-1)
+        # mu 5
+        ,
+        fast "<1!3 2!2>*3" $ sh (1/4) $
+        struct "<1(3,8)>"
+        $ s "[rolandtr808bd:0]"
+        # legato (segment 16 $ slow 2 $ range 0.75 1 $ saw)
+        # mu 10
+        # speed (segment 16 $ slow 16 $ range 18 0.2 $ saw)
+        |* speed (1/9)
+        ,
+        while ("<0 1 0 0 1>") (sh (3/4)) $
+        struct "[~ 1 ~ [~ 1]]"
+        $ s "rolandtr808sd:1"
+        ,
+        fast "<2!8 1!8>" $
+        struct "[~ <1 1*2> ~ <~ ~ ~ <1 1*4>>]"
+        $ s "rolandtr808sd:0"
+        # mu 5
+        ,
+        mask (sometimesBy 0.4 (sh (1/2)) $ "<[0 1] [0 0 1]>") $
+        fast 2 $
+        struct "1(3,8)"
+        $ s "rolandtr808hh"
+        ,
+        struct "1"
+        $ s "leg_kawaik4:107"
+        # note "[0, 14, 23]"
+        # legato 0.25
+        # gain 0.74
+        |* speed (1/4)
+        -- # silence
+    ]
+
+hush
